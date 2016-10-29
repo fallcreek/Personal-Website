@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-24. Swap Nodes in Pairs</title>
+
+</head>
+<body>
+
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>24. Swap Nodes in Pairs</h1>
+
+<hr />
+
+<blockquote><p>Given a linked list, swap every two adjacent nodes and return its head.
+    For example,Given 1->2->3->4, you should return the list as 2->1->4->3.
+    Your algorithm should use only constant space. You may not modify the values in the list, only nodes itself can be changed.</p>
+
+<p>Difficulty: Easy</p>
+<p>Tag: Linked List</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>The problem requests to use constant space, so I create three instances of ListNode, which is defined bellow.</p>
+
+<pre><code>/**
+* Definition for singly-linked list.
+* public class ListNode {
+*     int val;
+*     ListNode next;
+*     ListNode(int x) { val = x; }
+* }
+*/
+</code></pre>
+
+<p>They are previousNode, currentNode and nextNode.</p>
+
+<p>Then follow the steps bellow:</p>
+
+<ol>
+<li>Input a list.</li>
+<li>Separate the list into two parts: the first two nodes and the rest.</li>
+<li>Swap the two nodes in the first part.</li>
+<li>Link the original first node in the first part to the second node (if exists) in the second part.</li>
+<li>Input the second part and return to step 2.</li>
+</ol>
+
+
+<p>Quit conditions and special circumstances will be revealed in code.</p>
+<p>A rough sketch of the algorithm:</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/24-algorithm.png" width="475px"></div>
+<br>
+<h3>Code</h3>
+<pre><code>public class Solution {
+    public ListNode swapPairs(ListNode head) {
+
+    boolean findReturnNode = false;
+    ListNode previousNode = null;
+    ListNode currentNode = head;
+    ListNode nextNode = null;
+
+    while(currentNode != null &amp;&amp; currentNode.next != null)
+    {
+        if(!findReturnNode)
+        {           
+            head = currentNode.next;
+            findReturnNode = true;
+        }
+        if(previousNode != null)
+        {
+            previousNode.next = currentNode.next;
+        }
+
+        nextNode = currentNode.next.next;
+        currentNode.next.next = currentNode;
+        currentNode.next = nextNode;
+        previousNode = currentNode;
+        currentNode = nextNode;  
+    }
+    return head;
+    }
+}
+</code></pre>
+<h3>Runtime</h3>
+
+<p>Runtime: <code>0ms</code></p>
+
+<p>It beats <code>13.35%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/24-runtime.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+<br>
+</div>
+
+</body>
+</html>

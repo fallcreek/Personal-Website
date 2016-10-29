@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-117. Populating Next Right Pointers in Each Node II</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>117. Populating Next Right Pointers in Each Node II</h1>
+
+<hr />
+
+<blockquote><p>Follow up for problem "Populating Next Right Pointers in Each Node".</p>
+
+<p>What if the given tree could be any binary tree? Would your previous solution still work?</p>
+<br>
+<p>Note:</p>
+
+<p>You may only use constant extra space.</p>
+<br>
+<p>For example,</p>
+
+<p>Given the following binary tree,</p>
+
+<pre><code>     1
+   /  \
+  2    3
+ / \    \
+4   5    7</code></pre>
+<br>
+<p>After calling your function, the tree should look like:</p>
+
+<pre><code>     1 -&gt; NULL
+   /  \
+  2 -&gt; 3 -&gt; NULL
+ / \    \
+4-&gt; 5 -&gt; 7 -&gt; NULL</code></pre>
+<br>
+<p>Difficulty: Hard</p>
+
+<p>Tag: Tree, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>In this problem, we need to write a funtion to find the left-most node in a specific level.</p>
+
+<p>This function help us find the start node of a specific level. What's more, it help us link the nodes in a level. This is the process of this function:</p>
+
+<ol>
+<li>Give a tree's root, do the following steps while the root is not null.
+
+<ol>
+<li>If root's left is not null, return root's left;</li>
+<li>Else if root's right is not null, return root's right;</li>
+<li>Else if root's next is not null, move root to root's next;</li>
+<li>Else, return null.</li>
+</ol>
+</li>
+<li>Return null.</li>
+</ol>
+
+
+<p>So in the main code, we shouldn't link current node's right node with the left node of current node's next node, because the tree is not perfect. Instead, we should link current node's right node(if exists) to the node that is returned by the function above when we input current node's next node to it.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for binary tree with next pointer.
+ * public class TreeLinkNode {
+ *     int val;
+ *     TreeLinkNode left, right, next;
+ *     TreeLinkNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void connect(TreeLinkNode root) {
+        TreeLinkNode leftNode = root;
+        TreeLinkNode currNode = null;
+        
+        while(leftNode != null)
+        {
+            currNode = leftNode;
+            
+            while(currNode != null)
+            {
+                if(currNode.left != null && currNode.right != null)
+                {   
+                    currNode.left.next = currNode.right;
+                    currNode.right.next = findLeftNode(currNode.next);
+                }
+                else if(currNode.left != null)
+                {
+                    currNode.left.next = findLeftNode(currNode.next);
+                }
+                else if(currNode.right != null)
+                {
+                    currNode.right.next = findLeftNode(currNode.next);
+                }
+                
+                currNode = currNode.next;
+            }
+                
+            leftNode = findLeftNode(leftNode);
+        }
+        
+    }
+    
+    public TreeLinkNode findLeftNode(TreeLinkNode root)
+    {
+        while(root != null)
+        {
+            if(root.left != null)   return root.left;
+            else if(root.right != null) return root.right;
+            else if(root.next != null)  root = root.next;
+            else return null;
+        }
+        return null;
+    }
+    
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>31.98%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/117-runtime-1.png">
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(1)</em></li>
+</ul>
+<br>
+</div>
+</body>
+</html>

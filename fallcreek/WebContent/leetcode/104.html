@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-104. Maximum Depth of Binary Tree</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>104. Maximum Depth of Binary Tree</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, find its maximum depth.</p>
+
+<p>The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.</p>
+
+<p>Difficulty: Easy</p>
+
+<p>Tag: Tree, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>The maximum depth of a tree equals one plus the larger maximum depth of the root's two subtrees. If a subtree is null, its depth is zero.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int maxDepth(TreeNode root) {
+        if(root == null)    return 0;
+        
+        return 1 + Math.max(maxDepth(root.left),maxDepth(root.right));
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>10.15%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/104-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>. Because the function will be called once for each node in the tree.</li>
+<li>Space Complexity: The memory used for recursion is decided by the given tree. In the worst case, each node in the tree only has one subtree. Then the space complexity is <em>O(n)</em>.</li>
+</ul>
+
+<br>
+</div>
+</body>
+</html>

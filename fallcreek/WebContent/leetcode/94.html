@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-94. Binary Tree Inorder Traversal</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>94. Binary Tree Inorder Traversal</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, return the inorder traversal of its nodes' values.</p>
+<br>
+<p>For example:</p>
+
+<p>Given binary tree {1,#,2,3},</p>
+
+<pre><code> 1
+  \
+   2
+  /
+ 3</code></pre>
+
+<p>return [1,3,2].</p>
+
+<p>Note: Recursive solution is trivial, could you do it iteratively?</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Stack, Hash Table</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm 1 (Stack)</h3>
+
+<p>This solution is quite similar to my second solution in problem 145.</p>
+
+<ol>
+<li>Pop the stack and get the root.</li>
+<li>If the root has right subtree, push it into the stack.</li>
+<li>Push the root itself into the stack.</li>
+<li>If the root has left subtree, push it into the stack.</li>
+<li>If the root is a leaf node, remove it from the stack and add its value to list.</li>
+<li>Remove all subtrees of the root.</li>
+</ol>
+
+
+<p>In this process, every node will become a leaf node after it has been visited. Only a leaf node's value should be added to the list. Because if a node is not a leaf node, it means that this node have subtrees, which will influence the order.</p>
+
+<h3>Code 1</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List&lt;Integer> inorderTraversal(TreeNode root) {
+        List&lt;Integer> list = new ArrayList&lt;Integer>();
+        Stack&lt;TreeNode> stack = new Stack&lt;TreeNode>();
+        
+        if(root == null)    return list;
+        stack.push(root);
+        
+        while(!stack.isEmpty())
+        {
+            root = stack.pop();
+            
+            if(root.right != null)  stack.push(root.right);
+            stack.push(root);
+            if(root.left != null)   stack.push(root.left);
+            
+            if(root.left == null && root.right == null)
+            {
+                stack.pop();
+                list.add(root.val);
+            }
+                
+                
+            root.left = null;
+            root.right = null;
+        }
+        
+        return list;
+    }
+}</code></pre>
+
+<h3>Runtime 1</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>4.67%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/94-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity 1</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(h)</em>, where h is the height of the tree.</li>
+</ul>
+
+
+<hr />
+
+<h3>Algorithm 2 (Stack)</h3>
+
+<p>Although the problem doesn't forbid us to modify the tree, I don't think it is a good way. I'll introduce another solution without modifying the tree.</p>
+
+<ol>
+<li>Do the following steps while the root isn't null and the stack isn't empty.
+
+<ol>
+<li>Do the following steps while the root isn't null.
+
+<ol>
+<li>Push the root into stack.</li>
+<li>Move root to its left subtree.</li>
+</ol>
+</li>
+<li>Pop the stack and get the root.</li>
+<li>Add root's value to the list.</li>
+</ol>
+</li>
+</ol>
+
+
+<h3>Code 2</h3>
+
+<pre><code>public class Solution {
+    public List&lt;Integer> inorderTraversal(TreeNode root) {
+        List&lt;Integer> list = new ArrayList&lt;Integer>();
+        Stack&lt;TreeNode> stack = new Stack&lt;TreeNode>();
+        
+        while(root != null || !stack.isEmpty())
+        {
+            while(root != null)
+            {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop();
+            list.add(root.val);
+            root = root.right;
+            
+        }
+              
+        return list;
+    }
+}</code></pre>
+
+<h3>Runtime 2</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>4.67%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/94-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity 2</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(h)</em>, where h is the height of the tree.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

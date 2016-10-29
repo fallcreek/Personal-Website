@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>141. Linked List Cycle</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>141. Linked List Cycle</h1>
+
+<hr />
+
+<blockquote><p>Given a linked list, determine if it has a cycle in it.</p>
+<br>
+<p>Follow up:</p>
+
+<p>Can you solve it without using extra space?</p>
+<br>
+<p>Difficulty: Easy</p>
+
+<p>Tag: Linked List, Two Pointers</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Create two references:</p>
+
+<ul>
+<li>fastNode: move 2 nodes at a time;</li>
+<li>slowNode: move 1 node at a time;</li>
+</ul>
+
+
+<p>They all start at the dummyHead and move along the list. If fastNode and slowNode meet, then the list has a cycle. Because when the slower pointer has examined n nodes, the faster pointer will have examined 2n nodes and have “passed” the slower pointer, regardless of the loop’s size.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = head;
+        ListNode fastNode = dummyHead;
+        ListNode slowNode = dummyHead;
+        
+        while(fastNode != null && fastNode.next != null && fastNode.next.next != null)
+        {
+            if(fastNode == slowNode && fastNode != dummyHead)
+            {
+                return true;
+            }
+            
+            fastNode = fastNode.next.next;
+            slowNode = slowNode.next;
+        }
+        
+        return false;
+    }
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>9.65%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/141-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>. In the worst case we examine 3n nodes, which is still <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+<br>
+</div>
+
+</body>
+</html>

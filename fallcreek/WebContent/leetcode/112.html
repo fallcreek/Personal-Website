@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>112. Path Sum</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>112. Path Sum</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree and a sum, determine if the tree has a root-to-leaf path such that adding up all the values along the path equals the given sum.</p>
+<br>
+<p>For example:</p>
+
+<p>Given the below binary tree and sum = 22,</p>
+
+<pre><code>          5
+         / \
+        4   8
+       /   / \
+      11  13  4
+     /  \      \
+    7    2      1
+</code></pre>
+
+<p>return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.</p>
+<br>
+<p>Difficulty: Easy</p>
+
+<p>Tag: Tree, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Examine every node by DFS, and pass the current sum to its subtrees. Do it recursively until we find a leaf that the sum of its value and the result passed by its parent equals the target sum.</p>
+
+<h3>Code</h3>
+
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean hasPathSum(TreeNode root, int sum) {
+        return DFS(root,sum,0);
+    }
+    
+    public boolean DFS(TreeNode root, int sum, int result)
+    {
+        if(root == null)    return false;
+        result += root.val;
+        if(result == sum && root.left == null && root.right == null)   return true;
+        else    return DFS(root.left,sum,result) || DFS(root.right,sum,result);
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>11.18%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/112-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(h)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

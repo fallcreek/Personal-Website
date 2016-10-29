@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-114. Flatten Binary Tree to Linked List</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>114. Flatten Binary Tree to Linked List</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, flatten it to a linked list in-place.</p>
+<br>
+<p>For example,</p>
+
+<p>Given</p>
+
+<pre><code>     1
+    / \
+   2   5
+  / \   \
+ 3   4   6</code></pre>
+<br>
+<p>The flattened tree should look like:</p>
+
+<pre><code> 1
+  \
+   2
+    \
+     3
+      \
+       4
+        \
+         5
+          \
+           6</code></pre>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>This is the process of recursion:
+1.  If root's right node is not null, pass it to root's left subtree. If null, pass the node received from root's parent to root's left subtree.
+2.  Pass the node received from root's parent to root's right subtree.
+3.  If root is a leaf, make root's right pointer point to the node received from root's parent.
+4.  If not, if root's left subtree is not null, make root's right pointer point to its left subtree, and make root's left pointer point to null.
+5.  Return root.</p>
+
+<p>The following picture will show how my algorithm works:</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/114-algorithm-1.png" width="475px"></div>
+<br>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void flatten(TreeNode root) {
+        postorder(root,null);
+    }
+    
+    public TreeNode postorder(TreeNode root, TreeNode linkNode)
+    {
+        if(root == null)    return null;
+        TreeNode leftNode = postorder(root.left,(root.right == null) ? linkNode : root.right);
+        TreeNode rightNode = postorder(root.right,linkNode);
+        if(root.left == null && root.right == null)
+            root.right = linkNode;
+        else
+        {
+            if(leftNode != null)
+            {
+                root.right = leftNode;
+                root.left = null;
+            }
+        }
+        return root;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>31.76%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/114-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(h)</em></li>
+</ul>
+<br>
+</div>
+</body>
+</html>

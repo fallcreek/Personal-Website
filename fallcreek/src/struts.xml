@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="true" />
+
+    <package name="default" namespace="/" extends="struts-default">
+
+        <default-action-ref name="index" />
+
+        <global-results>
+            <result name="error">/error.jsp</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+
+        <action name="index">
+            <result type="redirectAction">
+                <param name="actionName">HelloWorld</param>
+                <param name="namespace">/example</param>
+            </result>
+        </action>
+    </package>
+
+    <include file="example.xml"/>
+
+    <!-- Add packages here -->
+    <package name="leetcode" extends="struts-default" namespace="/">
+		<action name="leetcode" class="action.leetcodeaction">
+			<result name="success">/leetcode.jsp</result>
+			<result name="fail">/WEB-INF/error.jsp</result>
+		</action>
+	</package>
+	
+	<package name="recentleetcode" extends="struts-default" namespace="/">
+		<action name="recentleetcodeaction" class="action.recentleetcodeaction" method="returnContent">
+		</action>
+	</package>
+	
+	<package name="blog" extends="struts-default" namespace="/">
+		<action name="blog" class="action.blogaction">
+			<result name="success">/blog.jsp</result>
+			<result name="null">/comingsoon.jsp</result>
+		</action>
+	</package>
+	
+	<package name="error" extends="struts-default" namespace="/">
+		<action name="error" class="action.erroraction">
+			<result name="error">/WEB-INF/error.jsp</result>
+		</action>
+	</package>
+	
+	<package name="contact" extends="struts-default" namespace="/">
+		<action name="contact" class="action.erroraction">
+			<result name="error">/contact.jsp</result>
+		</action>
+	</package>
+	
+	<package name="upload" extends="struts-default" namespace="/">
+		<action name="upload" class="action.uploadaction">
+			<result name="success">/upload.jsp</result>
+			<result name="fail">/WEB-INF/error.jsp</result>
+		</action>
+		
+		<action name="update" class="action.updateaction">
+			<result name="success">/WEB-INF/error.jsp</result>
+			<result name="fail">/WEB-INF/error.jsp</result>
+		</action>
+		
+		
+	</package>
+	
+	<package name="test" extends="struts-default" namespace="/">
+		<action name="testaction" class="action.testaction">
+			<result name="success">/test.jsp</result>
+		</action>
+	</package>
+	
+	
+	
+</struts>

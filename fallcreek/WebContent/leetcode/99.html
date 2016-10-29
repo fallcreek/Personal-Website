@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-99. Recover Binary Search Tree</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>99. Recover Binary Search Tree</h1>
+
+<hr />
+
+<blockquote><p>Two elements of a binary search tree (BST) are swapped by mistake.</p>
+
+<p>Recover the tree without changing its structure.</p>
+<br>
+<p>Note:</p>
+
+<p>A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?</p>
+<br>
+<p>Difficulty: Hard</p>
+
+<p>Tag: Tree, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm 1 (Morris Traversal)</h3>
+
+<p>If we want to solve this problem in space, morris traversal is our best choice. Because other ways may use recursion or some variables to store data such as stack and queue.</p>
+
+<p>I won't explain how morris traversal works here and I will use it directly in my code. If you don't know much about morris traversal, please learn it at first.</p>
+
+<p>Okay, now I'll use inorder morris traversal to traverse the tree, and I will visit the node with the lowest value to the node with the largest value according to the property of BST.</p>
+
+<p>For example, this is a correct BST:</p>
+
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/99-algorithm-1.png" width="475px"></div>
+<br>
+
+<p>Its inorder traversal is [1,5,8,10,15,20,30].</p>
+
+<p>If two of the nodes are swapped, such as node 5 and 15:</p>
+
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/99-algorithm-2.png" width="475px"></div>
+<br>
+
+<p>Then its inorder traversal is [1,15,8,10,5,20,30].</p>
+
+<p>During the traversal, I check whether the current value is larger than the previous value. If not, the previous node and the current node will be added into a list(Note: previous node should be added firstly!).</p>
+
+<p>In the above example, node 15 and node 8 (8 &lt; 15), node 10 and node 5 (5 &lt; 10) will be added into the list. The list is [15,8,10,5]. I find that <strong>the first node</strong> and <strong>the last node</strong> of the list are exactly the nodes that are swapped.</p>
+
+<p>It is because that if we swap two node (A and B, A is lower than B) in a BST, the current value in node A will be larger than its original value, and it must violate the property of BST. So the first abnormal node in the inorder traversal is the larger one of the two swapped nodes. In the above example, [1,5,8 ...] is changed to [1,15,8 ...]. 15 > 1 doesn't violate the property of BST, but 8 &lt; 15 violates, and no violation will appear before it(1&lt;15, no violation).</p>
+
+<p>Similarly, the second swapped node is must lower than its previous node's value. In the above example, [... 10,15,20,30] is changed to [... 10,5,20,30]. 5 &lt; 10 violates the property of BST, and in the rest traversal, no violation will appear(5&lt;20&lt;30, no violation).</p>
+
+<p>Now, my approach is very clear. We only need to use inorder traversal to find out every abnormal nodes, and swap the first and the last node.</p>
+
+<p>There are some examples:
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/99-algorithm-3.png" width="475px"></div>
+<br>
+
+<h3>Code 1</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void recoverTree(TreeNode root) {
+        
+        
+        TreeNode currNode = root;
+        TreeNode preNode = new TreeNode(Integer.MIN_VALUE);
+        
+        LinkedList&lt;TreeNode> list = new LinkedList&lt;TreeNode>();
+        
+        while(currNode != null)
+        {
+            if(currNode.left != null)
+            {
+                TreeNode predecessor = currNode.left;
+                while(predecessor.right != null && predecessor.right != currNode)
+                    predecessor = predecessor.right;
+                    
+                if(predecessor.right == null)
+                {
+                    predecessor.right = currNode;
+                    currNode = currNode.left;
+                }
+                else    
+                {
+                    predecessor.right = null;
+                    if(currNode.val < preNode.val)
+                    {
+                        list.add(preNode);
+                        list.add(currNode);
+                    }
+                    preNode = currNode;
+                    currNode = currNode.right;
+                }                
+                
+            }
+            else
+            {
+                if(currNode.val < preNode.val)
+                {
+                    list.add(preNode);
+                    list.add(currNode);
+                }
+                
+                preNode = currNode;
+                currNode = currNode.right;
+            }
+        }
+        
+        int temp = list.getFirst().val;
+        list.getFirst().val = list.getLast().val;
+        list.getLast().val = temp;
+        
+        return;
+    }
+    
+   
+}</code></pre>
+
+<h3>Runtime 1</h3>
+<p>Runtime: <code>5ms</code></p>
+
+<p>It beats <code>28.60%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/99-runtime-2.png">
+</div>
+
+<br>
+<h3>Complexity 1</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+
+
+<hr />
+
+<h3>Algorithm 2 (Recursive)</h3>
+
+<p>Although the space complexity of this solution is not <em>O(1)</em>, I still want to introduce my recursive solution.</p>
+
+<p>The basic thought of it comes from the third approach in problem 98. I use lower bound and upper bound to judge whether a node violates BST's property. If not, just swap the current node with the violated bound and traverse the tree from the root again until no violation appears.</p>
+
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/99-algorithm-4.png" width="475px"></div>
+<br>
+
+<h3>Code 2</h3>
+
+
+<pre><code>public class Solution {
+    public void recoverTree(TreeNode root) {
+        TreeNode min = new TreeNode(Integer.MIN_VALUE);
+        TreeNode max = new TreeNode(Integer.MAX_VALUE);
+        
+        while(!DFS(root,min,max));
+        
+        return;
+    }
+    
+    public boolean DFS(TreeNode root, TreeNode min, TreeNode max)
+    {
+        if(root == null)    return true;
+        
+        if(root.val > min.val && root.val < max.val)
+            return DFS(root.left,min,root) && DFS(root.right,root,max);
+        else if(root.val < min.val)
+        {
+            int temp = root.val;
+            root.val = min.val;
+            min.val = temp;
+            return false;
+        }
+        else 
+        {
+            int temp = root.val;
+            root.val = max.val;
+            max.val = temp;
+            return false;
+        }
+    }
+}</code></pre>
+
+<h3>Runtime 2</h3>
+<p>Runtime: <code>6ms</code></p>
+
+<p>It beats <code>25.47%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/99-runtime-2.png">
+</div>
+
+<br>
+</div>
+</body>
+</html>

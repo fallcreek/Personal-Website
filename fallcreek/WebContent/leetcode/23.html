@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-23. Merge k Sorted Lists</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>23. Merge k Sorted Lists</h1>
+
+<hr />
+
+<blockquote><p>Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.</p>
+
+<p>Difficulty: Hard</p>
+
+<p>Tag: Divide and Conquer, Linked List, Heap</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>In problem 21, I have finished a function that can merge two sorted lists. Firstly I tried to merge the k sorted lists one by one. As expected, my solution exceeded time limitation.</p>
+
+<p>Then let's solve this problem by divide and conquer algorithm, which is time-efficient.</p>
+
+<ul>
+<li><strong>Divide</strong> the given lists into two subproblems. The first one has the first half of the total lists, and the sencond one has the rest.</li>
+<li><strong>Conquer</strong> the subproblems by solving them recursively. If the subproblem has only one list, just return it. If the subproblem has two list, call the function in [problem 21] to merge them.</li>
+<li><strong>Combine</strong> the solutions to the subproblems into the solution to the original problem.</li>
+</ul>
+
+
+<h3>Code</h3>
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists == null || lists.length == 0)
+            return null;
+             
+        int length = lists.length;
+        
+        return merge(lists,0,length - 1);       
+    }
+    
+    public ListNode merge(ListNode[] lists, int start, int end)
+    {
+        if(end - start == 0)
+            return lists[start];
+        else if(end - start == 1)
+            return mergeTwoLists(lists[start],lists[end]);
+        else
+        {
+            int middle = start + (end - start) / 2;
+            return mergeTwoLists(merge(lists,start,middle),merge(lists,middle+1,end));
+        }
+    }
+       
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = null;
+        
+        ListNode curr = dummyHead;
+        
+        while(l1 != null || l2 != null)
+        {
+           
+            if(l1 == null || l2 == null)  
+            {
+                curr.next = (l1 == null) ? l2 : l1;
+                return dummyHead.next;
+            }
+           
+            int n1 = l1.val;
+            int n2 = l2.val;
+            
+            if(n1 <= n2)
+            {
+                curr.next = l1;
+                curr = l1;
+                l1 = l1.next;
+            }
+            else
+            {
+                curr.next = l2;
+                curr = l2;
+                l2 = l2.next;
+            }
+        }
+        
+        return dummyHead.next;
+        
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>3ms</code></p>
+
+<p>It beats <code>92.60%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/23-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li><p>Time Complexity:</p>
+
+<p>  T(k) = 2T(k/2) + <em>O(nk)</em>, where n is the maximum length of each list.</p>
+
+<p>  Then T(k) = <em>O(nklogk)</em></p></li>
+<li><p>Space Complexity: <em>O(logk)</em>.</p></li>
+</ul>
+</div>
+</body>
+</html>

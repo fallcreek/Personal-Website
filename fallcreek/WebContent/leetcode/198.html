@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<title>fallcreek-198. House Robber</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>198. House Robber</h1>
+
+<hr />
+
+<blockquote><p>You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security system connected and <strong>it will automatically contact the police if two adjacent houses were broken into on the same night</strong>.</p>
+
+<p>Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight <strong>without alerting the police</strong>.</p>
+
+<p>Difficulty: Easy</p>
+
+<p>Tag:Dynamic Programming</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Each house has and only has two states:</p>
+
+<ol>
+<li>Rob this house</li>
+<li>Skip this house</li>
+</ol>
+
+
+<p>When we go to the ith house, we need to make our choice. Two values should be recorded after we have made our decisions:</p>
+
+<ol>
+<li>The maximum money we have robbed if we rob the ith house.<strong>(R)</strong></li>
+<li>The maximum money we have robbed if we skip the ith house.<strong>(S)</strong></li>
+</ol>
+
+
+<p>Imagine that we begin to rob at the first house that has m1 dollars. We have two choice now, rob it or go to the next house. If we rob it, then the maximum money we gain is m1. If we skip it, then the maximum money we gain is zero <strong>(R=m1,S=0)</strong>.</p>
+
+<p>We just record these values and go to the next house, which stashes m2 dollars. There are also two choices. If we rob it, <strong>then we must skip the previous house</strong>. We already have the maximum money we can gain if we skip the previous house, and that is zero. So if we rob this house, the maximum money we can rob is 0 + m2 = m2(skip the first house, and rob the second house). If we skip it, <strong>then we can either rob the previous house or skip it</strong>. Under both conditions, we already have recorded the maximum money we can rob before robbing this house. What we need to do is choosing a larger one(m1). Thus, if we skip this house, the maximum money we can rob is m1 + 0 = m1(rob the first house, and skip the second house). Now, we can update the value of R and S <strong>(R=m2,S=m1)</strong>.</p>
+
+<p>We also just record these values and go to the third house. Using the same method, we update R and S, and go to the 4th house... After we passed the last house and update these values, the answer comes out (the larger one in {R,S}).</p>
+
+<p>A rough sketch of the algorithm:</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/198-algorithm.png" width="475px"></div>
+<br>
+
+<h3>Code</h3>
+<pre><code>public class Solution {
+    public int rob(int[] nums) {
+        int chooseThis = 0;
+        int leaveThis = 0;
+        int tempChoose = 0;
+        int tempLeave = 0;
+
+        for(int num : nums)
+        {
+            //Rob this house
+            tempChoose = leaveThis + num;
+            //Skip this house
+            tempLeave = chooseThis > leaveThis ? chooseThis : leaveThis;
+            
+            chooseThis = tempChoose;
+            leaveThis = tempLeave;
+        }
+        
+        return chooseThis > leaveThis ? chooseThis : leaveThis;
+    }
+}
+</code></pre>
+
+<h3>Runtime</h3>
+
+<p>Runtime: <code>0ms</code></p>
+
+<p>It beats <code>48.10%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/198-runtime.png">
+</div>
+<br><br>
+</div>
+</body>
+</html>

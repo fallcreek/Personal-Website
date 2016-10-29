@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-148. Sort List</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>148. Sort List</h1>
+
+<hr />
+
+<blockquote><p>Sort a linked list in O(n log n) time using constant space complexity.</p>
+
+<p>Difficulty: Medium</p>
+
+<p>Tag: Linked List, Sort</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm (Merge Sort)</h3>
+
+<p>We all know that merge sort and quick sort have <em>O(nlogn)</em> time complexity. I'll introduce my solution using merge sort in this part and another solution using quick sort in the second part.</p>
+
+<p>Before solving this problem, I have solved [problem 23. Merge k Sorted Lists] and finished a function to merge two sorted lists. Follow the thought of divide and conquer, we recursively split the list into two sublists and sort them. Finally we merge the two sorted sublists.</p>
+
+<pre><code>sortList(head)
+1   if the list is null or only has one node, just return head.
+2   split the list into two sublists(l1 and l2) in the middle.
+3   merge two sorted lists sortList(l1) and sortList(l2), and return the result.
+</code></pre>
+
+<p>For example:</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/148-algorithm-1.png" width="475px"></div>
+<br>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    
+    ListNode getMiddleOfList(ListNode head) {  
+        ListNode slow = head;  
+        ListNode fast = head;  
+        while(fast.next != null && fast.next.next != null) {  
+            slow = slow.next;  
+            fast = fast.next.next;  
+        }  
+        return slow;  
+    }
+    
+    public ListNode sortList(ListNode head) {
+        
+        if(head == null || head.next == null)    return head;
+        
+        ListNode middleNode = getMiddleOfList(head);
+        ListNode l2 = middleNode.next;
+        middleNode.next = null;
+        
+        return mergeTwoLists(sortList(head),sortList(l2));
+    }
+    
+    
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if(l1 == null)  return l2;
+        if(l2 == null)  return l1;
+        
+        ListNode head = null;
+        
+        if(l1.val <= l2.val)
+        {
+            head = l1;
+            l1.next = mergeTwoLists(l1.next,l2);
+        }
+        else
+        {
+            head = l2;
+            l2.next = mergeTwoLists(l1,l2.next);
+        }
+        
+        return head;   
+    }   
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>9ms</code></p>
+
+<p>It beats <code>17.01%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/148-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(nlogn)</em>.</li>
+<li>Space Complexity: <em>O(logn)</em>. It is because recursion uses stack space.</li>
+</ul>
+
+
+<hr />
+
+<h2>Learn From Others</h2>
+
+<h3>Algorithm (Quick Sort)</h3>
+
+<p>Now let's use quick sort to solve this problem.</p>
+
+<p>The problem doesn't demand that we shouldn't modify nodes' values, so we can just exchange values during quick sort.(Actually, I have finished a solution that exchanges nodes without modifying their values. However, it need a lot of swap actions during each step, and the solution exceeds time limitation.)</p>
+
+<p>For example:</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/148-algorithm-2.png" width="475px"></div>
+<br>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    
+
+   public static ListNode partition(ListNode head, ListNode end){
+	int pivot = end.val;
+	ListNode lastSmallNode = null;
+	ListNode tmpHead = head;
+	while(tmpHead != end){
+		if(tmpHead.val < pivot){
+			if(lastSmallNode == null) lastSmallNode = head;
+			else lastSmallNode = lastSmallNode.next;
+			int tmp = lastSmallNode.val;
+			lastSmallNode.val = tmpHead.val;
+			tmpHead.val = tmp;
+		}
+		tmpHead = tmpHead.next;
+	}
+	
+	if(lastSmallNode == null){
+		end.val = head.val;
+		head.val = pivot;
+		return null;
+	}else{
+		end.val = lastSmallNode.next.val;
+		lastSmallNode.next.val = pivot;
+		return lastSmallNode;
+	}
+}
+
+public  static void quickSort(ListNode head, ListNode end){
+	if( head == null || head == end || end == null || head.next == null) return;
+	ListNode mid = partition(head, end);
+	quickSort(head, mid);
+	
+	if(mid == null)
+		quickSort(head.next, end);
+	
+	else if(mid != end && mid.next != null && mid.next != end)
+		quickSort(mid.next.next, end);
+}
+
+public static  ListNode sortList(ListNode head) {
+    if(head == null || head.next == null) return head;
+	ListNode tail = head;
+	while(tail.next != null)
+		tail = tail.next;
+	quickSort(head,tail);
+   	return head;
+}   
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>316ms</code></p>
+
+<p>It beats <code>???</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/148-runtime-2.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(nlogn)</em>.</li>
+<li>Space Complexity: <em>O(logn)</em>. It is because recursion uses stack space.</li>
+</ul>
+<br>
+
+</div>
+</body>
+</html>

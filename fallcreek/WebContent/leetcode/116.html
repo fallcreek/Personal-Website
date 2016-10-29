@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-116. Populating Next Right Pointers in Each Node</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>116. Populating Next Right Pointers in Each Node</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree</p>
+
+<pre><code>  struct TreeLinkNode {
+        TreeLinkNode *left;
+        TreeLinkNode *right;
+        TreeLinkNode *next;
+    }</code></pre>
+
+<p>Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.</p>
+
+<p>Initially, all next pointers are set to NULL.</p>
+<br>
+<p>Note:</p>
+
+<p>You may only use constant extra space.
+You may assume that it is a perfect binary tree (ie, all leaves are at the same level, and every parent has two children).
+For example,
+Given the following perfect binary tree,</p>
+
+<pre><code>     1
+   /  \
+  2    3
+ / \  / \
+4  5  6  7</code></pre>
+
+<p>After calling your function, the tree should look like:</p>
+
+<pre><code>     1 -&gt; NULL
+   /  \
+  2 -&gt; 3 -&gt; NULL
+ / \  / \
+4-&gt;5-&gt;6-&gt;7 -&gt; NULL</code></pre>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Because the tree is a perfect binary tree, we can use a node named pre to visit the left-most node of each level. Assume that every node in the level we are visiting are already linked during the previous iteration. Then we examine the nodes in this level one by one and link current node's left child with right child, and link current node's right child to the left child of current node's next node.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for binary tree with next pointer.
+ * public class TreeLinkNode {
+ *     int val;
+ *     TreeLinkNode left, right, next;
+ *     TreeLinkNode(int x) { val = x; }
+ * }
+ */
+public class Solution {    
+    public void connect(TreeLinkNode root) {
+        if (root == null) return;
+        TreeLinkNode pre = root;
+        TreeLinkNode cur = null;
+        while(pre.left != null) {
+            cur = pre;
+            while(cur != null) {
+                cur.left.next = cur.right;
+                if(cur.next != null) cur.right.next = cur.next.left;
+                cur = cur.next;
+            }
+            pre = pre.left;
+        }
+    }
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>31.22%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/116-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(1)</em></li>
+</ul>
+<br>
+
+</div>
+</body>
+</html>

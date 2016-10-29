@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-19. Remove Nth Node From End of List</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>19. Remove Nth Node From End of List</h1>
+
+<hr />
+
+<blockquote><p>Given a linked list, remove the nth node from the end of list and return its head.</p>
+
+<p>Example:
+Given linked list: 1->2->3->4->5, and n = 2.</p>
+
+<p>After removing the second node from the end, the linked list becomes 1->2->3->5.</p>
+
+<p>Note: Given n will always be valid.
+Try to do this in one pass.</p>
+
+<p>Difficulty: Easy</p>
+
+<p>Tag: Linked List; Two Pointers</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm1</h3>
+
+<p>A simple way to solve it is to traverse the list twice. In the first time, we are able to gain the length of the list. Then we know the position of the nth node, and remove it in the second time.</p>
+
+<h3>Code1</h3>
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+ 
+public class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+       
+        int length = 0;
+        ListNode currentNode = head;
+        
+        if(head == null)
+            return head;
+        
+        //first time      
+        while(currentNode != null)
+        {
+            length ++;
+            currentNode = currentNode.next;
+        }
+           
+        //second time 
+        int find = length - n;
+        
+        currentNode = head;
+        if(find == 0) //remove the first node
+        {
+            head = head.next;
+        }
+        else
+        {
+            while(find > 1) //find the node before the given node
+            {
+                currentNode = currentNode.next;
+                find --;
+            }
+            currentNode.next = currentNode.next.next;
+        }
+         return head;
+    }
+}</code></pre>
+
+
+
+<h3>Runtime1</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>6.99%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/19-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+
+<h3>Complexity1</h3>
+
+<ul>
+<li>Time Complexity: Although this process involves two passes through the list, it's still <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(1)</em>. We only need a few variables for storage.</li>
+</ul>
+<br><br>
+
+<hr />
+
+<h3>Algorithm2</h3>
+
+<p>Although algorithm1 has O(n) time complexity, it solves the problem in two passes. How can we do it in only one pass?</p>
+
+<p>The first idea that came to my mind is recording and updating (n+1) nodes before the current node during the traverse process. So when the final node is visited, we already have the references of (n+1) nodes before it, which include the reference of the (n+1)th node from the end. However, this approach need extra space to store (n+1) references of the nodes, which is not space-efficient.</p>
+
+<p>Then I realized that I don't need to store all the references of the (n+1) nodes. What I want is just the reference of the (n+1)th node from the end. So the extra space can be eliminated simply by deleting the references between the (n+1)th node and the current node.</p>
+
+<p>A rough sketch of the algorithm:</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/19-algorithm-2.png" width="475px"></div>
+
+<h3>Code2</h3>
+
+<pre><code>public class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        
+       if(head == null)
+            return head;
+       ListNode previousNode = head;
+       ListNode currentNode = head;
+       
+       int count = 0;
+       
+       while(currentNode != null)
+       {
+            if(count == n + 1)
+                previousNode = previousNode.next;
+            else
+              count++;  
+            
+            currentNode = currentNode.next;
+       }
+       
+       if(count < n + 1)
+       {
+           head = head.next;
+       }
+       else    
+            previousNode.next = previousNode.next.next;
+       
+       return head; 
+        
+    }
+}</code></pre>
+
+<h3>Runtime2</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>6.99%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/19-runtime-2.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+
+
+<h3>Complexity2</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(1)</em>. We only need a few variables for storage.</li>
+</ul>
+<br><br>
+</div>
+</body>
+</html>

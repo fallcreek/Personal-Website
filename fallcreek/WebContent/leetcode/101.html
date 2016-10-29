@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-101. Symmetric Tree</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>101. Symmetric Tree</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).</p>
+<br>
+<p>For example, this binary tree [1,2,2,3,4,4,3] is symmetric:</p>
+
+<pre><code>    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3</code></pre>
+<br>
+<p>But the following [1,2,2,null,3,null,3] is not:</p>
+
+<pre><code>  1
+ / \
+2   2
+ \   \
+ 3    3</code></pre>
+<br>
+<p>Note:
+Bonus points if you could solve it both recursively and iteratively.</p>
+<br>
+<p>Difficulty: Easy</p>
+
+<p>Tag: Tree, Depth-first Search, Breadth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm (recursive)</h3>
+
+<p>A simple way is recursion. We only need to judge whether the subtrees(p and q) of root is symmetric to each other. If the roots of p and q are the same, then judge whether p's left subtree is the same as q's right subtree and p's right subtree is the same as q's left subtree.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if(root == null)    return true;
+        return isEqual(root.left,root.right);
+    }
+    
+    public boolean isEqual(TreeNode left,TreeNode right)
+    {
+        if(left == null && right == null)   return true;
+        else if(left != null && right != null)
+        {
+            if(left.val == right.val)
+                return isEqual(left.left,right.right) && isEqual(left.right,right.left);
+            else return false;
+        }
+        else return false;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>26.05%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/101-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(h)</em>.</li>
+</ul>
+
+
+<hr />
+
+<h2>Others Solution</h2>
+
+<h3>Algorithm (iterative)</h3>
+
+<ol>
+<li>Push root's left and right subtrees into stack if they are not null.</li>
+<li>Do the following things while stack is not empty.
+
+<ol>
+<li>Pop the stack and get the right root and left root and judge whether they have the same value.</li>
+<li>Push left root's left subtree and right root's right subtree into stack if they are not null.</li>
+<li>Push left root's right subtree and right root's left subtree into stack if they are not null.</li>
+</ol>
+</li>
+</ol>
+
+
+<h3>Code</h3>
+
+<pre><code>public class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if(root==null)  return true;
+        
+        Stack&lt;TreeNode> stack = new Stack&lt;TreeNode>();
+        TreeNode left, right;
+        if(root.left!=null){
+            if(root.right==null) return false;
+            stack.push(root.left);
+            stack.push(root.right);
+        }
+        else if(root.right!=null){
+            return false;
+        }
+            
+        while(!stack.empty()){
+            if(stack.size()%2!=0)   return false;
+            right = stack.pop();
+            left = stack.pop();
+            if(right.val!=left.val) return false;
+            
+            if(left.left!=null){
+                if(right.right==null)   return false;
+                stack.push(left.left);
+                stack.push(right.right);
+            }
+            else if(right.right!=null){
+                return false;
+            }
+                
+            if(left.right!=null){
+                if(right.left==null)   return false;
+                stack.push(left.right);
+                stack.push(right.left);
+            }
+            else if(right.left!=null){
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>3ms</code></p>
+
+<p>It beats <code>6.13%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/101-runtime-2.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(h)</em>.</li>
+</ul>
+<br>
+
+</div>
+</body>
+</html>

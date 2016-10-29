@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-106. Construct Binary Tree from Inorder and Postorder Traversal</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>106. Construct Binary Tree from Inorder and Postorder Traversal</h1>
+
+<hr />
+
+<blockquote><p>Given inorder and postorder traversal of a tree, construct the binary tree.</p>
+<br>
+<p>Note:</p>
+
+<p>You may assume that duplicates do not exist in the tree.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Array, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Look at the following tree:</p>
+
+<pre><code>    __1__
+   /     \
+  2       3
+ /  \    /  \
+4   5   6    7
+   /
+  8 </code></pre>
+
+<p>Its <strong>preorder</strong> traversal is [1,2,4,5,8,3,6,7],</p>
+
+<p>its <strong>inorder</strong> traversal is [4,2,8,5,1,6,3,7],</p>
+
+<p>and its <strong>postorder</strong> traversal is [4,8,5,2,6,7,3,1].</p>
+
+<p>We know that preorder traversal is middle-left-right, and postorder traversal is left-right-middle. The <strong>inverse</strong> of postorder traversal is middle-right-left, which is very similar to preorder traversal.</p>
+
+<p>In this problem, a tree's inorder and postorder traversal will be given. We can reverse the postorder traversal and the problem becomes how to construct a tree from middle-right-left preorder and inorder traversal, which is similar to [problem 105].</p>
+
+<p>For example, in this problem, we have a tree's inorder and postorder traversal:</p>
+
+<pre><code>inorder traversal: [4,2,8,5,1,6,3,7]
+postorder traversal: [4,8,5,2,6,7,3,1]</code></pre>
+
+<p>After reversing the postorder traversal, we have:</p>
+
+<pre><code>middle-right-left preorder traversal: [1,3,7,6,2,5,8,4]
+inorder traversal: [4,2,8,5,1,6,3,7]</code></pre>
+
+<p>In problem 105, we have the same tree's preorder and inorder traversal:</p>
+
+<pre><code>preorder traversal: [1,2,4,5,8,3,6,7]
+inorder traversal: [4,2,8,5,1,6,3,7]</code></pre>
+
+<p>In problem 105, we find the position of root in inorder traversal, and this process is the same in this problem. The only difference is that the distribution of root's left and right children in preorder and middle-right-left preorder traversal is different. In preorder traversal, the following four nodes(2,4,5,8) are inorder traversal of root's left subtree, but in middle-right-left preorder traversal, the following three nodes(3,7,6) are middle-right-left preorder traversal of root's right subtree. A little of modifications are needed to make the solution to problem 105 be applicable to this problem.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        if(inorder == null) return null;
+        int length = inorder.length;
+        
+        Map&lt;Integer,Integer> map = new HashMap&lt;Integer,Integer>();
+        for(int i = 0; i < length; i++)
+            map.put(inorder[i],i);
+        
+        for(int i = 0; i < length/2; i++)
+        {
+            int temp = postorder[i];
+            postorder[i] = postorder[length - i - 1];
+            postorder[length -i - 1] = temp;
+        }
+        
+        return build(postorder,0,length-1,inorder,0,length-1,map);
+    }
+    
+    
+    public TreeNode build(int[] preorder,int ps, int pe, int[] inorder, int is, int ie, Map&lt;Integer,Integer> map)
+    {
+        if(ps > pe) return null;
+        int length = pe - ps + 1;
+       
+        TreeNode head = new TreeNode(preorder[ps]);
+        int position = map.get(preorder[ps]) - is;
+        int count = length - position - 1;
+        
+        head.left = build(preorder,ps+count+1,pe,inorder,is,is+position-1,map);
+        head.right = build(preorder,ps+1,ps+count,inorder,is+position+1,ie,map);
+       
+        return head;
+    }
+    
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>6ms</code></p>
+
+<p>It beats <code>66.96%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/106-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(n)</em>. We need a map to store all nodes and their position.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

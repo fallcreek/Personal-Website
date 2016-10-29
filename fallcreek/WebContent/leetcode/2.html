@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-2. Add Two Numbers</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>2. Add Two Numbers</h1>
+
+<hr />
+
+<blockquote><p>You are given two linked lists representing two non-negative numbers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.</p>
+<br>
+<p>Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)</p>
+
+<p>Output: 7 -> 0 -> 8</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Linked List; Math</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm1 (Wrong Answer)</h3>
+
+<p>At first, I wrote two functions. The first one converts a list into an integer, and the second one converts an integer into a list. Then I used these functions to solve this problem. However, my solution was not accepted.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/2-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+
+<p>The input lists are [9] and [1,9,9,9,9,9,9,9,9,9]. The expected output list is[0,0,0,0,0,0,0,0,0,0,1], but mine output list is [8,0,4,5,6,0,0,1,4,1], which is very strange.</p>
+
+<p>Then it came to me that the largest number of an integer in Java is (2^32 - 1) that is lower than the expected output number in the case above. The data is overflowed!</p>
+
+<p>So I need to figure out another algorithm without converting a list into an integer.</p>
+<br>
+<hr />
+
+<h3>Algorithm2 (Accept)</h3>
+
+<p>When we sum A and B, we add the ones digits of them firstly, and the ones digit of the result is just the ones digit of the final answer. If the result is larger than nine, then we also need to carry its tens digit to the next iteration(sum the tens digit of A and B).</p>
+
+<p>Then look at the example given by the problem. The first nodes of the two input lists are just their ones digits. Adding them(2 and 5) and we will get the ones digit of the output number(7), which is also the first node of the output list.</p>
+
+<p>In the second iteration, we add 4 and 6. The result is 10, so we leave its ones digit(0) and send its tens digit(1) to the next iteration.</p>
+
+<p>In the third iteration, we add 3 , 4 and 1(from the previous iteration). Then we get 8 that is the last node of the output list.</p>
+
+<p>However, we need to note that if we get a number larger than nine in the last iteration, don't forget its tens position!</p>
+
+<h3>Code2</h3>
+
+<pre><code>
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+       ListNode dummyHead = new ListNode(0);
+       ListNode currentNode = dummyHead;
+       
+       int onesDigit = 0;
+       int tensDigit = 0;
+       
+       while(l1 != null || l2 != null)
+       {
+           int n1 = 0;
+           int n2 = 0;
+           
+           if(l1 != null)
+           {
+               n1 = l1.val;
+               l1 = l1.next;
+           }
+           
+           if(l2 != null)
+           {
+               n2 = l2.val;
+               l2 = l2.next;
+           }
+           
+           onesDigit = (n1 + n2 + tensDigit) % 10;
+           tensDigit = (n1 + n2 + tensDigit) / 10;
+           
+           currentNode.next = new ListNode(onesDigit);
+           currentNode = currentNode.next;
+           currentNode.next = null;
+          
+       }
+       if(tensDigit != 0)
+       {
+           currentNode.next = new ListNode(tensDigit);
+           currentNode.next.next = null;
+       }
+       
+       return dummyHead.next;
+    }
+}
+</code></pre>
+
+<h3>Runtime2</h3>
+<p>Runtime: <code>3ms</code></p>
+
+<p>It beats <code>96.61%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/2-runtime-2.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+<h3>Complexity2</h3>
+
+<ul>
+<li>Time Complexity: <em>O(max(m,n))</em>.</li>
+<li>Space Complexity: <em>O(max(m,n))</em>.</li>
+</ul>
+</div>
+</body>
+</html>

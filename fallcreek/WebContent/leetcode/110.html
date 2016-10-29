@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+
+<title>fallcreek-110. Balanced Binary Tree</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>110. Balanced Binary Tree</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, determine if it is height-balanced.</p>
+
+<p>For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.</p>
+
+<p>Difficulty: Easy</p>
+
+<p>Tag:Tree;Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>A binary tree node is defined bellow.</p>
+
+<pre><code>/**
+* Definition for a binary tree node.
+* public class TreeNode {
+*     int val;
+*     TreeNode left;
+*     TreeNode right;
+*     TreeNode(int x) { val = x; }
+* }
+*/
+</code></pre>
+
+<p>A binary tree node has an attribute named val, which can be used to record depth value. A tree node has two subtrees with their own depth value. We need to compare the difference of the two depth values to determine whether the tree is height-balanced. If yes, then the tree's depth value can be calculated and stored in its root node. If not, just return false. Using depth-first search, each node's depth value will be gained. Then the problem will be solved easily.</p>
+
+<h3>Code</h3>
+<pre><code>public class Solution {
+    public boolean isBalanced(TreeNode root) {
+        if(root == null)
+            return true;
+        
+        if(isBalanced(root.left) &amp;&amp; isBalanced(root.right))
+        {
+            if(root.left == null &amp;&amp; root.right == null)
+            {
+                root.val = 0;
+                return true;
+            }
+            else if(root.left == null &amp;&amp; root.right != null) 
+            {
+                if(root.right.val > 0)
+                    return false;
+                    
+                root.val = root.right.val + 1;
+                return true;
+            }
+            else if(root.right == null &amp;&amp; root.left != null)
+            {
+                if(root.left.val > 0)
+                    return false;
+                    
+                root.val = root.left.val + 1;
+                return true;
+            }
+            
+            if(Math.abs(root.left.val - root.right.val) &lt;= 1)
+            {
+                root.val = root.left.val > root.right.val ? root.left.val + 1 : root.right.val + 1;
+                return true;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
+        
+        
+    }
+}
+</code></pre>
+<h3>Runtime</h3>
+
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>87.06%</code> of javasubmissions.</p>
+
+
+	<div>
+	<a class="runtime-detail">Detail</a>
+	<div class="mask"></div>
+	<div class="around"></div>
+	<img class="img-runtime" alt="runtime" src="../img/leetcode/110-runtime-1.png">
+	</div>
+
+<br><br>
+<h2>Learn From Others</h2>
+
+<h3>Code</h3>
+<pre><code>public class Solution {
+    
+    public boolean flag = true;
+    
+    public int dfs(TreeNode node)
+    {
+        if(node == null)
+            return 0;
+        
+        int leftDepth = dfs(node.left);
+        if(leftDepth == -1)
+            return -1;
+            
+        int rightDepth = dfs(node.right);
+        if(rightDepth == -1)
+            return -1;
+            
+        if(Math.abs(leftDepth - rightDepth) &lt;= 1)
+        {
+            return leftDepth > rightDepth ? leftDepth + 1 : rightDepth + 1;
+        }    
+        else
+        {
+            flag = false;
+            return - 1;
+        }
+    
+    }
+    
+    public boolean isBalanced(TreeNode root) {
+        dfs(root);
+        return flag;
+        
+    }
+}
+</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>80.26%</code> of javasubmissions.</p>
+
+
+	<div>
+	<a class="runtime-detail">Detail</a>
+	<div class="mask"></div>
+	<div class="around"></div>
+	<img class="img-runtime" alt="runtime" src="../img/leetcode/110-runtime-2.png">
+	</div>
+
+<br><br>
+
+
+</div>
+</body>
+</html>

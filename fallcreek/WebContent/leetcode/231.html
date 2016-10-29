@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-231. Power of Two</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+
+<div id="text">
+<h1>231. Power of Two</h1>
+
+<hr />
+
+<blockquote><p>Given an integer, write a function to determine if it is a power of two.</p>
+
+<p>Difficulty: Easy</p>
+
+<p>Tag:Math;Bit Manipulation</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Actually, I didn't figure out an efficient algorithm when I first tried to solve this problem. My solution is very easy and obvious. We will get the answer easily just by dividing the input number by 2 over and over again.</p>
+
+<h3>Code</h3>
+
+<pre><code>public class Solution {
+    public boolean isPowerOfTwo(int n) {
+        if(n == 0)
+            return false;
+        while(n != 1)
+        {
+            if(n%2 != 0)
+                return false;
+            else
+                n /= 2;
+        }
+        return true;
+    }
+}
+</code></pre>
+
+<h3>Runtime</h3>
+
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>19.36%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/231-runtime-1.png">
+</div>
+<br><br>
+
+<h2>Learn From Others</h2>
+
+<h3>Algorithm One</h3>
+
+<p>The tags of this problem include "Bit Manipulation", so why don't we use it to solve this problem?</p>
+
+<p>Here are some integers that are power of two and their binary code:</p>
+
+<p><strong>1</strong>: 0000 0000 0000 0000 0000 0000 0000 0001</p>
+
+<p><strong>2</strong>: 0000 0000 0000 0000 0000 0000 0000 0010</p>
+
+<p><strong>4</strong>: 0000 0000 0000 0000 0000 0000 0000 0100</p>
+
+<p><strong>8</strong>: 0000 0000 0000 0000 0000 0000 0000 1000</p>
+
+<p>...</p>
+
+<p><strong>1,073,741,824</strong>: 0100 0000 0000 0000 0000 0000 0000 0000</p>
+
+<p>It's apparent that their binary code only has one "1".</p>
+
+<p>So we only need to count the number of "1" in an integer's binary code to determine if this integer is a power of two.</p>
+
+<h3>Code One</h3>
+<pre><code>public class Solution {
+    public boolean isPowerOfTwo(int n) {
+    int count = 0;
+    while (n > 0)
+    {
+        count += (n&0x01);
+        n >>= 1;
+    }
+    return count == 1;
+
+    }
+}
+</code></pre>
+
+<h3>Runtime One</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>21.96%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/231-runtime-2.png">
+</div>
+<br><br>
+
+<h3>Algorithm Two</h3>
+
+<p>If n is a power of two, then its binary code only has one "1". In other words, the binary code of (n-1) contains a string of "1"s. For example:</p>
+
+<p><strong>8</strong>: 0000 0000 0000 0000 0000 0000 0000 1000</p>
+
+<p><strong>7</strong>: 0000 0000 0000 0000 0000 0000 0000 0111</p>
+
+<p>We find that eight and(and operation) seven is zero, and this feature is applicable for every integer that is a power of two.</p>
+
+<p>Thus, we can use and operation to solve this problem easily.</p>
+
+<h3>Code Two</h3>
+
+<pre><code>public class Solution {
+    public boolean isPowerOfTwo(int n) {
+        if(n <= 0)
+            return false;
+
+        if((n & (n-1)) == 0)
+            return true;
+        else
+            return false;
+    }
+}
+</code></pre>
+
+<h3>Runtime Two</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>21.96%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/231-runtime-3.png">
+</div>
+<br><br>
+</div>
+</body>
+</html>

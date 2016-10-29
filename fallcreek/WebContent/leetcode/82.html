@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+
+<title>fallcreek-82. Remove Duplicates from Sorted List II</title>
+
+</head>
+<body>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>82. Remove Duplicates from Sorted List II</h1>
+
+<hr />
+
+<blockquote><p>Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only <strong>distinct</strong> numbers from the original list.</p>
+<br>
+<p>For example,</p>
+
+<p>Given 1->2->3->3->4->4->5, return 1->2->5.</p>
+
+<p>Given 1->1->1->2->3, return 2->3.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Linked List</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>This problem is a little bit more complex than problem 83. I'll modify my solution to problem 83 to solve this problem.</p>
+
+<p>In problem 83, a preNode points to the first node in the nodes that share a same value. However, in this problem, only distinct numbers should be left. So a preNode should point to the <strong>distinct</strong> node just before the nodes with same value. Then we can deleting all the duplicate numbers without leaving the first one. For example:</p>
+
+<p>Input : 1->2->2->3</p>
+
+<p>Problem 83: preNode points to the first node with value 2. The nodes between preNode and the next number will be deleted(the second node with value 2).</p>
+
+<p>This problem: preNode points to the node before the first node with value 2, which is the node with value 1. All the nodes with value 2 will be deleted.</p>
+
+<p>In some cases, their first numbers are duplicate. So a dummyHead is necessary, which can be regarded as the first distinct number.</p>
+
+<p>Also, a boolean variable, isDistinct, is added. It helps record whether this number is duplicate.</p>
+
+<p>The process of my solution is shown in the following image.</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/82-algorithm-1.png" width="475px"></div>
+<br>
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null)    return head;
+        
+        ListNode dummyHead = new ListNode(1);
+        dummyHead.next = head;
+        ListNode currNode = dummyHead.next;
+        ListNode preNode = dummyHead;
+        boolean isDistinct = true;
+        
+        while(currNode != null && currNode.next != null)
+        {
+            if(currNode.val != currNode.next.val)
+            {
+                if(isDistinct)  preNode = currNode;
+                else    
+                {
+                    preNode.next = currNode.next;
+                    isDistinct = true;
+                }
+            }
+            else
+            {
+                isDistinct = false;
+            }
+            currNode = currNode.next;
+        }
+        if(!isDistinct)     preNode.next = null;
+        
+        return dummyHead.next;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>20.11%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/82-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>, where n is the length of the given list. Because each node is visited once.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+<br>
+
+</div>
+</body>
+</html>

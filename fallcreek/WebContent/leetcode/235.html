@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>235. Lowest Common Ancestor of a Binary Search Tree</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>235. Lowest Common Ancestor of a Binary Search Tree</h1>
+
+<hr />
+
+<blockquote><p>Given a binary search tree (BST), find the lowest common ancestor (LCA) of two given nodes in the BST.</p>
+<br>
+<p>According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes v and w as the lowest node in T that has both v and w as descendants (where we allow a node to be a descendant of itself).”</p>
+
+<pre><code>      _______6______
+     /              \
+  ___2__          ___8__
+ /      \        /      \
+ 0      _4       7       9
+       /  \
+      3   5</code></pre>
+
+<p>For example, the lowest common ancestor (LCA) of nodes 2 and 8 is 6. Another example is LCA of nodes 2 and 4 is 2, since a node can be a descendant of itself according to the LCA definition.</p>
+<br>
+<p>Difficulty: Easy</p>
+
+<p>Tag: Tree</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>If root's value is larger than both the given nodes' value, then their lowest common ancestor is in root's left subtree.</p>
+
+<p>If root's value is lower than both the given node's value, then their lowest common ancestor is in root's right subtree</p>
+
+<p>Else, root is just their lower common ancestor.</p>
+
+<p>Do the tree steps recursively until we find the answer.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+       if(root.val > p.val && root.val > q.val){
+            return lowestCommonAncestor(root.left, p, q);
+        }else if(root.val < p.val && root.val < q.val){
+            return lowestCommonAncestor(root.right, p, q);
+        }else{
+            return root;
+        }
+    }
+    
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>9ms</code></p>
+
+<p>It beats <code>97.30%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/235-runtime-1.png">
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(h)</em>.</li>
+<li>Space Complexity:<em>O(h)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

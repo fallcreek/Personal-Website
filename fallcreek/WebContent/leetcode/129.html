@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-129. Sum Root to Leaf Numbers</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>129. Sum Root to Leaf Numbers</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree containing digits from 0-9 only, each root-to-leaf path could represent a number.</p>
+
+<p>An example is the root-to-leaf path 1->2->3 which represents the number 123.</p>
+
+<p>Find the total sum of all root-to-leaf numbers.</p>
+<br>
+<p>For example,</p>
+
+<pre><code>   1
+  / \
+ 2   3</code></pre>
+
+<p>The root-to-leaf path 1->2 represents the number 12.</p>
+
+<p>The root-to-leaf path 1->3 represents the number 13.</p>
+
+<p>Return the sum = 12 + 13 = 25.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p> A recursive DFS algorithm can solve it easily. We need to pass two variables to the next recursion. They are the total sum of all paths and the sum of current path. When we reach a leaf, the sum of current path will be added to the total sum. Do it recursively unitl we have examined all nodes.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int sumNumbers(TreeNode root) {
+        return DFS(root,0,0);
+    }
+    
+    public int DFS(TreeNode root, int sum, int total)
+    {
+        if(root == null)    return total;
+        
+        sum = sum * 10 + root.val;
+        if(root.left == null && root.right == null) return total + sum;
+        
+        total = DFS(root.left,sum,total);
+        total = DFS(root.right,sum,total);
+        return total;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>0ms</code></p>
+
+<p>It beats <code>72.96%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/129-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(h)</em></li>
+</ul>
+<br>
+</div>
+</body>
+</html>

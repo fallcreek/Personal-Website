@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>124. Binary Tree Maximum Path Sum</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>124. Binary Tree Maximum Path Sum</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, find the maximum path sum.</p>
+<br>
+<p>For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child connections. The path does not need to go through the root.</p>
+
+<p>For example:</p>
+
+<p>Given the below binary tree,</p>
+
+<pre><code>   1
+  / \
+ 2   3</code></pre>
+
+<p>Return 6.</p>
+<br>
+<p>Difficulty: Hard</p>
+
+<p>Tag: Tree, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Using recursion was my first thought when I met this problem.</p>
+
+<p>I need a global variable named maximum to record current maximum value. Also, I need a function named findMax to find the maximum value of a tree. However, findMax doesn't return the maximum value of the tree, it return the maximum value of a path whose end node is root.</p>
+
+<p>Take the following tree as an example.</p>
+
+<pre><code>     10
+    /
+   1
+  / \
+ 2   3</code></pre>
+
+<p>Let's first call findMax(10). This function will call findMax(1) and findMax(null). FindMax(1) will call findMax(2) and findMax(3).</p>
+
+<p>FindMax(2) will return 2 because the maximum value of a path whose end node is node 2 is 2. In the same time, the global variable maximum will be set to 2.</p>
+
+<p>FindMax(3) will return 3 for the same reason. Meanwhile, the global variable maximum will be set to 3 because a larger path value appears.</p>
+
+<p>Now in findMax(1), we know that the maximum value on both sides of root is 2 and 3. So the current maximum value is 1+2+3 = 6, and the global variable will be updated. However, findMax(1) shouldn't return 6! It is because path with value 6 (2->1->3) doesn't end in root 1. It should return 4 because the maximum value of a path whose end is root 1 is 4 (3->1).</p>
+
+<h3>Code</h3>
+
+<pre><code>  /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int maximum = Integer.MIN_VALUE;
+    
+    
+    public int maxPathSum(TreeNode root) {
+          findMax(root);
+          return maximum;
+    }
+    
+    public int findMax(TreeNode root)
+    {
+        if(root == null)    return 0;
+        
+        int leftMax = findMax(root.left);
+        int rightMax = findMax(root.right);
+        
+        int returnResult = Math.max(Math.max(leftMax + root.val, rightMax + root.val), root.val);
+        int result = Math.max(returnResult, leftMax + rightMax + root.val);
+        if(result > maximum)    maximum = result;
+        
+        return returnResult;  
+    }   
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>32.06%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/124-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(h)</em></li>
+</ul>
+<br>
+</div>
+</body>
+</html>

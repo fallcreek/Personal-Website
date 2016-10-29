@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-107. Binary Tree Level Order Traversal II</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>107. Binary Tree Level Order Traversal II</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, return the bottom-up level order traversal of its nodes' values. (ie, from left to right, level by level from leaf to root).</p>
+<br>
+<p>For example:</p>
+
+<p>Given binary tree [3,9,20,null,null,15,7],</p>
+
+<pre><code>  3
+ / \
+9  20
+  /  \
+ 15   7</code></pre>
+<br>
+<p>return its level order traversal as:</p>
+
+<pre><code>  [
+  [15,7],
+  [9,20],
+  [3]
+  ]</code></pre>
+<br>
+<p>Difficulty: Easy</p>
+
+<p>Tag: Tree, Breadth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>This problem is an extension to problem 102. If we reverse the result set of problem 102, we will get the answer of this problem.</p>
+
+<p>In problem 102, we use queue to gain the nodes of a specific level, add them to a list, and add the list to the result set. If we add the list to the head of the result set, we will get the reversed result set, which is just the answer of this problem.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List&lt;List&lt;Integer>> levelOrderBottom(TreeNode root) {
+        List&lt;List&lt;Integer>> list = new ArrayList&lt;List&lt;Integer>>();
+        Queue&lt;TreeNode> queue = new LinkedList&lt;TreeNode>();
+        
+        if(root == null)    return list;
+        
+        queue.offer(root);       
+        
+        while(!queue.isEmpty())
+        {
+            List&lt;Integer> innerList = new ArrayList&lt;Integer>();
+            int number = queue.size();
+            for(int i = 1; i <= number; i++)
+            {
+                if(queue.peek().left != null) queue.offer(queue.peek().left);
+                if(queue.peek().right != null) queue.offer(queue.peek().right);
+                innerList.add(queue.poll().val);
+            }
+            
+            list.add(0,innerList); //reverse the result list.
+        }
+        return list;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>4ms</code></p>
+
+<p>It beats <code>9.57%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/107-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(n)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

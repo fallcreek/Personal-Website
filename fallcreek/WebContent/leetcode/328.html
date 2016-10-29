@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-328. Odd Even Linked List</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>328. Odd Even Linked List</h1>
+
+<hr />
+
+<blockquote><p>Given a singly linked list, group all odd nodes together followed by the even nodes. Please note here we are talking about the node number and not the value in the nodes.</p>
+<br>
+<p>You should try to do it in place. The program should run in O(1) space complexity and O(nodes) time complexity.</p>
+<br>
+<p>Example:</p>
+
+<p>Given 1->2->3->4->5->NULL,</p>
+
+<p>return 1->3->5->2->4->NULL.</p>
+<br>
+<p>Note:
+The relative order inside both the even and odd groups should remain as it was in the input.
+The first node is considered odd, the second node even and so on ...</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Linked List</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>We can move the even nodes to a new list, and only leave odd nodes in the original list. Then we append the even list to the odd list.</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/328-algorithm-1.png" width="475px"></div>
+<br>
+<h3>Code</h3>
+
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        if(head == null)    return head;
+        
+        ListNode dummyHead = new ListNode(0);
+        ListNode odd = head;
+        ListNode even = dummyHead;
+        
+        while(true)
+        {
+            even.next = odd.next;
+            even = even.next;
+            
+            if(even != null && even.next != null)
+            {
+                odd.next = even.next;
+                odd = odd.next;
+            }
+            else
+            {
+                odd.next = dummyHead.next;
+                break;
+            }
+        }
+        
+        return head;
+        
+    }
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>3.44%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/328-runtime-1.png">
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-92. Reverse Linked List II</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>92. Reverse Linked List II</h1>
+
+<hr />
+
+<blockquote><p>Reverse a linked list from position m to n. Do it in-place and in one-pass.</p>
+<br>
+<p>For example:</p>
+
+<p>Given 1->2->3->4->5->NULL, m = 2 and n = 4,</p>
+
+<p>return 1->4->3->2->5->NULL.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Linked List</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Visit each node and move the nodes between the mth and nth nodes to the front of the mth node.</p>
+
+<p>I declare several references:</p>
+
+<ul>
+<li>returnHead: points to the node that should be returned. If m is one, then it means the original head of the given list will change, and the returnHead is the nth node of the original list.</li>
+<li>dummyHead: it is a dummyHead of nodes from position m to n.</li>
+<li>currNode: the node that is being visited.</li>
+<li>preNode: the node before currNode.</li>
+</ul>
+
+
+<p>During the pass, I count the position of the currNode.</p>
+
+<p>If the position is m, then the (m-1)th node will become the dummyHead, which means that the reversed list start after the dummyHead. Then set head to be the mth node.</p>
+
+<p>Then move preNode and currNode to their next node.</p>
+
+<p>If the position is larger than m, then move the preNode to the position after the dummyHead.</p>
+
+<p>If the position is n that means it is the final node that should be moved, then judge whether this node is the head of the total list and break the loop.</p>
+
+<p>When the while loop is broken, the currNode points to the (n+1)th node that should be appended to the head, which is the original nth node and becomes the last node of the reversed sublist in the end.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if(head == null || m == n)    return head;
+        
+        ListNode returnHead = head;
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = head;
+        ListNode currNode = head;
+        ListNode preNode = dummyHead;
+        
+        int count = 0;
+        
+        while(currNode != null)
+        {
+            count++;
+            
+            if(count == m)
+            {
+                dummyHead = preNode;
+                head = currNode;
+            }
+           
+            preNode = currNode;
+            currNode = currNode.next;
+            
+            if(count > m)
+            {
+                preNode.next = dummyHead.next;
+                dummyHead.next = preNode;
+            }
+            
+            
+            if(count == n)
+            {
+                returnHead = (m == 1) ? preNode : returnHead;
+                break;
+            }
+        }
+        
+        head.next = currNode;
+       
+        
+        return returnHead;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>0ms</code></p>
+
+<p>It beats <code>10.40%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/92-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>, where n is the length of the given list. Because each node is visited once.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

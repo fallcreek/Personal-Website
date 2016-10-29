@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-147. Insertion Sort List</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>147. Insertion Sort List</h1>
+
+<hr />
+
+<blockquote><p>Sort a linked list using insertion sort.</p>
+
+<p>Difficulty: Medium</p>
+
+<p>Tag: Linked List, Sort</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Traverse the list from the second node, and insert it into the right place before it.</p>
+
+<p>There are two ways for inserting. In the first approach, we change the references between nodes, which won't modify their values. In the second approach, we exchange values instead of modifying structure of the list. However, if we pick up the second approach, we need to change every node's value behind the insertion place. So we use the first approach.</p>
+
+<pre><code>InsertionSortList(head)
+1   create a dummyHead before head
+2   set currNode to be the second node of the list, and endNode to be the first node of the list
+3   start traversing the list from currNode 
+4       find the first node whose value is larger than currNode's value
+5       if we can't find such node before currNode
+6           set endNode to be currNode
+7       if we find such a node before currNode 
+8           move currNode to the position before this node
+9           link endNode to the rest list
+10  return dummyHead.next
+</code></pre>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        if(head == null)    return head;
+        
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = head;
+        
+        ListNode currNode = head.next;
+        ListNode endNode = head;
+        
+        int position = 1;
+        while(currNode != null)
+        {
+            position++;
+            ListNode preNode = dummyHead; 
+            int count = 1;
+            
+            while(count < position && preNode.next.val <= currNode.val)
+            {
+                preNode = preNode.next;
+                count++;
+            }
+            
+            if(count == position)
+            {
+                endNode = currNode;
+                currNode = currNode.next;
+                continue;
+            }
+                
+                
+            ListNode tempNode = currNode;
+            currNode = currNode.next;
+            tempNode.next = preNode.next;
+            preNode.next = tempNode;
+            endNode.next = currNode;
+        }
+        
+        return dummyHead.next;
+        
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+
+<p>Runtime: <code>33ms</code></p>
+
+<p>It beats <code>81.30%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/147-runtime-1.png">
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n^2)</em>. In the worst case, we examine 1 + 2 + 3 + ... + (n-1) nodes. Eventually, we examine n(n-1)/2 nodes, which is <em>O(n^2)</em>.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

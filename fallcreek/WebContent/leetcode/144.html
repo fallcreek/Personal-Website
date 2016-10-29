@@ -1,0 +1,257 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-144. Binary Tree Preorder Traversal</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>144. Binary Tree Preorder Traversal</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, return the preorder traversal of its nodes' values.</p>
+<br>
+<p>For example:</p>
+
+<p>Given binary tree {1,#,2,3},</p>
+
+<pre><code> 1
+  \
+  2
+ /
+3</code></pre>
+
+<p>return [1,2,3].</p>
+<br>
+<p>Note: Recursive solution is trivial, could you do it iteratively?</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Stack</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm 1 (Recursive)</h3>
+
+<ol>
+<li>Print out the root (or the subtree’s root) value.</li>
+<li>Do a preorder traversal on the left subtree.</li>
+<li>Do a preorder traversal on the right subtree.</li>
+</ol>
+
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List&lt;Integer> preorderTraversal(TreeNode root) {
+        List&lt;Integer> list = new ArrayList&lt;Integer>();
+        return preorder(root,list);
+    }
+    
+    public List&lt;Integer> preorder(TreeNode root, List&lt;Integer> list)
+    {
+        if(root == null)    return list;
+        
+        list.add(root.val);
+        list = preorder(root.left,list);
+        list = preorder(root.right,list);
+        return list;
+    }
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>53.27%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/144-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>. Because the function will be called once for each node in the tree.</li>
+<li>Space Complexity:<em>O(h)</em>, where h is the maximum height of the tree.</li>
+</ul>
+
+
+<hr />
+
+<h3>Algorithm 2 (Iterative)</h3>
+
+<p>A stack could be used to store tree nodes.</p>
+
+<p>In my solution, I only push tree nodes whose right child is not null into stack. Then when I pop the stack, I will get a tree node whose left child has been visited and right child has not.</p>
+
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/144-algorithm-2.png" width="475px"></div>
+<br>
+
+<h3>Code (Version 1)</h3>
+
+
+<pre><code>public class Solution {
+    public List&lt;Integer> preorderTraversal(TreeNode root) {
+        
+        Stack&lt;TreeNode> stack = new Stack&lt;TreeNode>();
+        List&lt;Integer> result = new ArrayList&lt;Integer>();
+        
+        
+        while(root != null)
+        {
+            result.add(root.val);
+            
+            if(root.left != null)
+            {
+                if(root.right != null)  stack.push(root);
+                root = root.left;
+            }
+            else if(root.right != null)
+            {
+                root = root.right;
+            }
+            else
+            {
+                root = stack.isEmpty() ? null : stack.pop();
+                root = (root == null) ? null : root.right;
+            }
+        }
+        return result;
+    }
+}</code></pre>
+
+<h3>Code (Version 2)</h3>
+
+
+<pre><code>public class Solution {
+    public List&lt;Integer> preorderTraversal(TreeNode root) {
+        
+        List&lt;Integer> list = new LinkedList&lt;Integer>();
+        Stack&lt;TreeNode> stack = new Stack&lt;TreeNode>();
+       
+        while(root != null || !stack.isEmpty())
+        {
+            while(root != null)
+            {
+                list.add(root.val);
+                if(root.right != null)  stack.push(root);
+                root = root.left;
+            }
+            
+            if(stack.isEmpty()) break;
+            
+            root = stack.pop();
+            root = root.right;
+        }
+       
+        return list;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>53.27%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/144-runtime-2.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>. Because each node in the tree will be visited once.</li>
+<li>Space Complexity: It depends on the structure of the tree. It won't exceed <em>O(h)</em>, where h is the height of the tree.</li>
+</ul>
+
+
+<hr />
+
+<h2>Others Solution</h2>
+
+<h3>Algorithm (Iterative)</h3>
+
+<p>This is a very neat solution:</p>
+
+<ol>
+<li>Pop the stack.</li>
+<li>Push the right child of the root(or subtree's root).</li>
+<li>Push the left child of the root(or subtree's root).</li>
+</ol>
+
+
+<p>However, it executes much more push and pop operations than my solution.</p>
+
+<h3>Code</h3>
+
+<pre><code>public class Solution {
+    public List&lt;Integer> preorderTraversal(TreeNode root) {
+        
+        List&lt;Integer> list = new LinkedList&lt;Integer>();
+        Stack&lt;TreeNode> stack = new Stack&lt;TreeNode>();
+        if(root!=null) stack.push(root);
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            list.add(node.val);
+            if(node.right!=null) stack.push(node.right);
+            if(node.left!=null) stack.push(node.left);
+        }
+        return list;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>1.55%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/144-runtime-3.png">
+</div>
+<br>
+
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>. Because each node in the tree will be visited once.</li>
+<li>Space Complexity: It depends on the structure of the tree. It won't exceed <em>O(h)</em>, where h is the height of the tree.</li>
+</ul>
+<br>
+
+</div>
+</body>
+</html>

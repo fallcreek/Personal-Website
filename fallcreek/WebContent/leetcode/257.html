@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-257. Binary Tree Paths</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>257. Binary Tree Paths</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, return all root-to-leaf paths.</p>
+<br>
+<p>For example, given the following binary tree:</p>
+
+<pre><code>    1
+  /   \
+ 2     3
+  \
+   5</code></pre>
+
+<p>All root-to-leaf paths are:</p>
+
+<p>["1->2->5", "1->3"]</p>
+<br>
+<p>Difficulty: Easy</p>
+
+<p>Tag: Tree, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>This problem is very similar to [problem 129. Sum Root to Leaf Numbers]. Their methods are also the same. The only difference is that we don't need to convert [1->2->5] to 125.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List&lt;String> binaryTreePaths(TreeNode root) {
+        List&lt;String> list = new ArrayList&lt;String>();
+        DFS(root,list,"");
+        return list;
+    }
+    
+    public void DFS(TreeNode root, List&lt;String> list, String path)
+    {
+        if(root == null)    return;
+        path = (path.equals("")) ? String.valueOf(root.val) : path + "->" + root.val;
+        
+        if(root.left == null && root.right == null)
+        {
+            list.add(path);
+            return;
+        }
+        
+        DFS(root.left,list,path);
+        DFS(root.right,list,path);
+    }
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>75.48%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/257-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(h)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

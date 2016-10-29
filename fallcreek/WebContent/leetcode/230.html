@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-230. Kth Smallest Element in a BST</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>230. Kth Smallest Element in a BST</h1>
+
+<hr />
+
+<blockquote><p>Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.</p>
+<br>
+<p>Note:</p>
+
+<p>You may assume k is always valid, 1 ≤ k ≤ BST's total elements.</p>
+<br>
+<p>Follow up:</p>
+
+<p>What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?</p>
+<br>
+<p>Hint:</p>
+
+<ol>
+<li>Try to utilize the property of a BST.</li>
+<li>What if you could modify the BST node's structure?</li>
+<li>The optimal runtime complexity is O(height of BST).</li>
+</ol>
+
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Binary Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Traverse the tree by inorder DFS, and count the number of nodes until we visit the kth node.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int result = 0;
+    public int number = 0;
+    
+    public int kthSmallest(TreeNode root, int k) {
+        inorder(root,k);
+        return result;
+    }
+    
+    public boolean inorder(TreeNode root, int k)
+    {
+        if(root == null)    return false;
+        if(!inorder(root.left,k))
+        {
+            number++;
+            if(number == k)
+            {
+                result = root.val;
+                return true;
+            }
+            else
+                return inorder(root.right,k);
+        }
+        return true;
+    }
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>49.02%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/230-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(h)</em>.</li>
+</ul>
+
+
+<h2>Follow Up</h2>
+
+<p>Now we need to improve our algorithm to run in <em>O(h)</em> time. We need to modify the BST node's structure. How to do it? There is a solution that I learned from the discuss of this problem.</p>
+
+<blockquote><p>The idea is to maintain rank of each node. We can keep track of elements in a subtree of any node while building the tree. Since we need K-th smallest element, we can maintain number of elements of left subtree in every node.</p>
+
+<p>Assume that the root is having N nodes in its left subtree. If K = N + 1, root is K-th node. If K &lt; N, we will continue our search (recursion) for the Kth smallest element in the left subtree of root. If K > N + 1, we continue our search in the right subtree for the (K – N – 1)-th smallest element. Note that we need the count of elements in left subtree only.</p>
+
+<p>Time complexity: O(h) where h is height of tree.</p></blockquote>
+
+<br>
+</div>
+</body>
+</html>

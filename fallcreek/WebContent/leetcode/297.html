@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-297. Serialize and Deserialize Binary Tree</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>297. Serialize and Deserialize Binary Tree</h1>
+
+<hr />
+
+<blockquote><p>Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.</p>
+
+<p>Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.</p>
+<br>
+<p>For example, you may serialize the following tree</p>
+
+<pre><code>  1
+ / \
+2   3
+   / \
+  4   5</code></pre>
+
+<p>as "[1,2,3,null,null,4,5]", just the same as how LeetCode OJ serializes a binary tree. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.</p>
+<br>
+<p>Note: Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.</p>
+<br>
+<p>Difficulty: Hard</p>
+
+<p>Tag: Tree, Design</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>The first thing we need to solve is how to use a string to represent a tree. If we use the pattern just like how LeetCode does, then we need to use queue to achieve BFS, which is not time efficient owing to the operations on queue (I have finished a solution that uses this method, but it exceeds time limitation).</p>
+
+<p>Using DFS may simplify our code and is also faster. So we use preorder traversal to serialized a tree as a string.</p>
+
+<p>For example:</p>
+
+<pre><code>    1
+   / \
+  2   3
+     / \
+    4   5</code></pre>
+
+<p>This tree will be serialized as "1,2,#,#,3,4,#,#,5,#,#". Note that null should also be included.</p>
+
+<p>So how to deserialize it?</p>
+
+<ol>
+<li>Split the string by "," and store each node's value in an array.</li>
+<li>Create the root of the whole tree, then call function DFS(root,list,1). The function need three parameters. The first is the tree's root. The second is the array. The third is the index of the array that we need to visit in the next.</li>
+<li>In function DFS(root,list,1), we need to construct the left and right subtrees of root. At first, we choose the 1st value in the array to be root's left child. Then we call DFS(root.left, list, 2). So step 3 will be executed recursively until root's left node is null. Note that this function returns the current index of array, so that we can know the next value to visit. So when a DFS is finished, we need to update the index.</li>
+<li>Step 3 construct a root's left subtree, and this step construct a root's right subtree. Assume that the current index is k, so we choose the kth value in the array to be root's right child. Then we call DFS(root.right,list,k+1) to construct the root's right subtree.</li>
+<li>Return the current index.</li>
+</ol>
+
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/297-algorithm-1.png" width="475px"></div>
+<br>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if(root == null)    return "#";
+        return root.val + "," + serialize(root.left) + "," + serialize(root.right);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String [] list = data.split(",");
+
+        TreeNode root = list[0].equals("#") ? null : new TreeNode(Integer.valueOf(list[0]));
+        DFS(root,list,1);
+        return root;
+    }
+    
+    public int DFS(TreeNode parent, String[] list, int number)
+    {
+        if(parent == null)  return number;
+        
+        parent.left = list[number].equals("#") ? null : new TreeNode(Integer.valueOf(list[number]));
+        number = DFS(parent.left,list,++number);
+        
+        parent.right = list[number].equals("#") ? null : new TreeNode(Integer.valueOf(list[number]));
+        number = DFS(parent.right,list,++number);
+
+        return number;
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.deserialize(codec.serialize(root));</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>21ms</code></p>
+
+<p>It beats <code>86.22%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/297-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity:
+
+<ul>
+<li>Serialize: <em>O(n)</em>.</li>
+<li>Deserialize: <em>O(n)</em>.</li>
+</ul>
+</li>
+<li>Space Complexity:
+
+<ul>
+<li>Serialize: <em>O(n)</em>.</li>
+<li>Deserialize: <em>O(h)</em>.</li>
+</ul>
+</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

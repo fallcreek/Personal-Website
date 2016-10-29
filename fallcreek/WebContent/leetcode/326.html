@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-326. Power of Three</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>326. Power of Three</h1>
+
+<hr />
+
+<blockquote><p>Given an integer, write a function to determine if it is a power of three.</p>
+
+<p>Difficulty: Easy</p>
+
+<p>Tag: Math</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>It is the easiest way to use recursive algorithm to solve this problem.</p>
+
+<h3>Code</h3>
+<pre><code>public class Solution {
+    public boolean isPowerOfThree(int n) {
+         if(n &lt;= 0)
+            return false;
+        else
+            return (n == 1) || ((n % 3 == 0) &amp;&amp; isPowerOfThree(n/3));
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>19ms</code></p>
+
+<p>It beats <code>42.87%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/326-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br><br>
+
+<h2>Learn From Others</h2>
+
+<h3>Algorithm</h3>
+
+<p>I learned this approach from the Editorial Solution of this problem. For more details, please visit: https://leetcode.com/articles/power-of-three/</p>
+
+<h3>Code</h3>
+
+<pre><code>public class Solution {
+
+    public boolean isPowerOfThree(int n) {
+
+        return Integer.toString(n,3).matches("^10*$");
+
+    }
+
+}
+</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>76ms</code></p>
+
+<p>It beats <code>3.63%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/326-runtime-2.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br><br>
+</div>
+</body>
+</html>

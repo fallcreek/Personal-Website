@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-199. Binary Tree Right Side View</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>199. Binary Tree Right Side View</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.</p>
+<br>
+<p>For example:</p>
+
+<p>Given the following binary tree,</p>
+
+<pre><code>   1          &lt;---
+ /   \
+2     3       &lt;---
+\     \
+5     4       &lt;---</code></pre>
+
+<p>You should return [1, 3, 4].</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Depth-first Search, Breadth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm 1 (BFS, Iterative)</h3>
+
+<p>Traverse the tree by BFS, and output the end node in each level.</p>
+
+<p>A queue stores the nodes in a specific level, examine them one by one, offer their children to the queue, and output the original last node in the queue before new nodes are added.</p>
+
+<h3>Code 1</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List&lt;Integer> rightSideView(TreeNode root) {
+        Queue&lt;TreeNode> queue = new LinkedList&lt;TreeNode>();
+        List&lt;Integer> list = new ArrayList&lt;Integer>();
+        if(root == null)    return list;
+        
+        queue.offer(root);
+        while(!queue.isEmpty())
+        {
+            int size = queue.size();
+            
+            for(int i = 1; i <= size; i++)
+            {
+                TreeNode node = queue.poll();
+                
+                if(node.left != null)   queue.offer(node.left);
+                if(node.right != null)   queue.offer(node.right);
+                
+                if(i == size)   list.add(node.val);
+            }
+        }
+        
+        return list;
+        
+    }
+}</code></pre>
+
+<h3>Runtime 1</h3>
+<p>Runtime: <code>3ms</code></p>
+
+<p>It beats <code>13.02%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/199-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity 1</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(h)</em>.</li>
+</ul>
+
+
+<hr />
+
+<h3>Algorithm 2 (DFS, Recursive)</h3>
+
+<p>For a tree we firstly calculate the right view of its left and right subtrees. For example,</p>
+
+<pre><code>   1          &lt;---
+ /   \
+2     3       &lt;---
+\     
+5             &lt;---</code></pre>
+
+<p>The right view of root's left subtree is [2,5], and of root's right subtree is [3]. They all start at the same level but may end at different level. The excess part of the left subtree's view should be added to right subtree's view. So the view of right subtree becomes [3,5]. Put root's value to its head, and we will get [1,3,5], which is the right view of the whole tree.</p>
+
+<h3>Code 2</h3>
+
+<pre><code>public class Solution {
+    public List&lt;Integer> rightSideView(TreeNode root) {
+
+        List&lt;Integer> list = new ArrayList&lt;Integer>();
+        if(root == null)    return list;
+        list.add(root.val);
+        
+        List&lt;Integer> left = rightSideView(root.left);
+        List&lt;Integer> right = rightSideView(root.right);
+        if(left.size() > right.size())
+        {
+            for(int i = right.size(); i < left.size(); i++)
+                right.add(left.get(i));
+        }
+        list.addAll(right);
+        return list;
+    }
+} </code></pre>
+
+
+<h3>Runtime 2</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>46.78%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/199-runtime-2.png">
+</div>
+<br>
+
+<h3>Complexity 2</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(h)</em>.</li>
+</ul>
+
+
+<hr />
+
+<h2>Others Solution</h2>
+
+<h3>Algorithm (DFS, Recursive)</h3>
+
+<p>Using a middle-right-left preorder traversal, we will visit the right-most nodes in each level one by one.</p>
+
+<h3>Code</h3>
+
+
+<pre><code>public class Solution {
+   public List&lt;Integer> rightSideView(TreeNode root) {
+        List&lt;Integer> result = new ArrayList&lt;Integer>();
+        rightView(root, result, 0);
+        return result;
+    }
+    
+    public void rightView(TreeNode curr, List&lt;Integer> result, int currDepth){
+        if(curr == null){
+            return;
+        }
+        if(currDepth == result.size()){
+            result.add(curr.val);
+        }
+        
+        rightView(curr.right, result, currDepth + 1);
+        rightView(curr.left, result, currDepth + 1);
+        
+    }
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>81.42%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/199-runtime-3.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(h)</em>.</li>
+</ul>
+
+<br>
+</div>
+</body>
+</html>

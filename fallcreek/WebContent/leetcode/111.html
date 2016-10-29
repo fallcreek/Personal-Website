@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-111. Minimum Depth of Binary Tree</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>111. Minimum Depth of Binary Tree</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, find its minimum depth.</p>
+
+<p>The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.</p>
+<br>
+<p>Difficulty: Easy</p>
+
+<p>Tag: Tree, Depth-first Search, Breadth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm 1 (Recursive, DFS)</h3>
+
+<p>A tree's minimum depth equals one plus the lower minimum depth of root's two subtrees if they are not null. If one of root's subtrees is null, the tree's minimum depth equals one plus the minimum depth of its subtree.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int minDepth(TreeNode root) {
+        if(root == null)    return 0;
+        
+        if(root.left != null && root.right != null)
+            return 1 + Math.min(minDepth(root.left), minDepth(root.right));
+        else
+            return 1 + Math.max(minDepth(root.left), minDepth(root.right));
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>11.20%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/111-runtime-1.png">
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(h)</em>.</li>
+</ul>
+
+
+<hr />
+
+<h3>Algorithm 2 (Iterative, BFS)</h3>
+
+<p>Queue can also help us solve this problem by bread-first search. Using a queue, we examine every node in a specific level. When we find a leaf, the current depth is just the answer.</p>
+
+<h3>Code</h3>
+
+<pre><code>public class Solution {
+    public int minDepth(TreeNode root) {
+        Queue&lt;TreeNode> queue = new LinkedList&lt;TreeNode>();
+        if(root == null) return 0;
+        queue.offer(root);
+        
+        int depth = 0;
+        
+        while(!queue.isEmpty())
+        {
+            depth++;
+            int number = queue.size();
+            
+            for(int i = 1; i <= number; i++)
+            {
+                TreeNode node = queue.poll();
+                if(node.left != null)   queue.offer(node.left);
+                if(node.right != null)   queue.offer(node.right);
+                if(node.left == null && node.right == null) return depth;
+            }
+        }
+        
+        return depth;
+    }
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>11.20%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/111-runtime-2.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(n)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+
+<title>fallcreek-292. Nim Game</title>
+
+</head>
+<body>
+
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>292. Nim Game</h1>
+
+<hr />
+
+<blockquote><p>You are playing the following Nim Game with your friend: There is a heap of stones on the table, each time one of you take turns to remove 1 to 3 stones. The one who removes the last stone will be the winner. You will take the first turn to remove the stones.</p>
+<br/>
+<p>Both of you are very clever and have optimal strategies for the game. Write a function to determine whether you can win the game given the number of stones in the heap.</p>
+<br/>
+<p>For example, if there are 4 stones in the heap, then you will never win the game: no matter 1, 2, or 3 stones you remove, the last stone will always be removed by your friend.</p>
+<br/>
+<p>Hint:
+If there are 5 stones in the heap, could you figure out a way to remove the stones such that you will always be the winner? </p>
+<br/>
+<p>Difficulty: Easy</p>
+
+<p>Tag:Brainteaser</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>The problem reveals that you will win if you leave 4 stones for your friend. So you will always win if there are 5, 6 or 7 stones in your turn.</p>
+
+<p>However, if there are 8 stones in the heap, you will lose definitely. Because no matter how many stones you take, your friend is able to leave 4 stone for you.</p>
+
+<p>And so on, you will always lose the game if there are 4*n stones in the heap.</p>
+
+<h3>Code</h3>
+<pre><code>public class Solution {
+    public boolean canWinNim(int n) {
+        
+        if(n % 4 == 0)
+            return false;
+        else 
+            return true;  
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+
+<p>Runtime: <code>0ms</code></p>
+
+<p>It beats <code>2.64%</code> of javasubmissions.</p>
+
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/292-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+
+
+
+
+<br>
+<br>
+</div>
+</body>
+</html>

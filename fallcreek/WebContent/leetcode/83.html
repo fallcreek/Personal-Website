@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-83. Remove Duplicates from Sorted List</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>83. Remove Duplicates from Sorted List</h1>
+
+<hr />
+
+<blockquote><p>Given a sorted linked list, delete all duplicates such that each element appear only once.</p>
+<br>
+<p>For example,</p>
+
+<p>Given 1->1->2, return 1->2.</p>
+
+<p>Given 1->1->2->3->3, return 1->2->3.</p>
+<br>
+<p>Difficulty: Easy</p>
+
+<p>Tag: Linked List</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Two references are used in this method:</p>
+
+<p><strong>preNode</strong> points to the first node in the nodes with same value.</p>
+
+<p><strong>currNode</strong> points to the current node.</p>
+
+<p>When the currNode moves to the next node, we should keep preNode being the first node that shares the same value with currNode. When the value of currNode changes, we should link the preNode to the new currNode, and then the duplicates will be deleted.</p>
+
+<h3>Code</h3>
+
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null)
+            return head;
+            
+        ListNode currNode = head;
+        ListNode preNode = head;
+        
+        while(currNode != null && currNode.next != null)
+        {
+            if(currNode.val != currNode.next.val)
+            {
+                preNode.next = currNode.next;
+                preNode = currNode.next;
+            }
+            currNode = currNode.next;
+        }
+        if(preNode != null)     preNode.next = currNode.next;
+        return head;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>17.70%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/83-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>, where n is the length of the given list. Because each node is visited once.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

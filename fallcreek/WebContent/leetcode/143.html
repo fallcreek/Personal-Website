@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-143. Reorder List</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>143. Reorder List</h1>
+
+<hr />
+
+<blockquote><p>Given a singly linked list L: L0→L1→…→Ln-1→Ln,</p>
+
+<p>reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…</p>
+
+<p>You must do this in-place without altering the nodes' values.</p>
+<br>
+<p>For example,</p>
+
+<p>Given {1,2,3,4}, reorder it to {1,4,2,3}.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Linked List</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Let's solve it in three steps:</p>
+
+<ul>
+<li>step1: Traverse the list and return its length l.</li>
+<li>step2: Split the list into two parts.
+
+<ul>
+<li>step2.1: Traverse half of the list and find the middle node and split the list in the middle.</li>
+<li>step2.2: Reverse the second sublist.</li>
+</ul>
+</li>
+<li>step3: Combine the two sublists.</li>
+</ul>
+
+
+<p>For example:</p>
+
+<p>Input: 1->2->3->4->5->6</p>
+
+<p>Step1: length of the list is 6.</p>
+
+<p>Step2.1: the middle node is 3, and we have two sublists now. 1->2->3 and 4->5->6.</p>
+
+<p>Step2.2: reverse the second sublist and we will have 6->5->4.</p>
+
+<p>Step3: combine 1->2->3 and 6->5->4, and we will have 1->6->2->5->3->4.</p>
+
+<h3>Code</h3>
+
+
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode reorderList(ListNode head) {
+        if(head == null)    return head;       
+        
+        //step1: count length of the list
+        ListNode currNode = head;
+        ListNode preNode = null;
+        
+        int length = 0;
+        while(currNode != null)
+        {
+            length++;
+            currNode = currNode.next;
+        }
+        
+        //step2.1: split the list into two parts
+        int splitPosition = (length % 2 == 0) ? (length / 2) : (length / 2 + 1);
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = head;
+        preNode = dummyHead;
+        while(splitPosition > 0)
+        {
+            preNode = dummyHead.next;
+            dummyHead.next = dummyHead.next.next;
+            splitPosition--;
+        }
+        preNode.next = null;
+        
+        //step2.1: reverse the second part
+        ListNode head2 = dummyHead.next;
+        ListNode currNode2 = dummyHead.next;
+        ListNode preNode2 = currNode2;
+        while(currNode2 != null)
+        {
+            preNode2 = currNode2.next;
+            currNode2.next = dummyHead.next;
+            dummyHead.next = currNode2;
+            currNode2 = preNode2;
+        }
+        if(head2 != null)   head2.next = null;
+        
+        
+        //step3: combine the two parts
+        currNode = head;
+        currNode2 = dummyHead.next;
+       
+        while(currNode != null && currNode2 != null)
+        {
+            preNode = currNode;
+            preNode2 = currNode2;
+            currNode = currNode.next;
+            preNode.next = currNode2;
+            currNode2 = currNode2.next;
+            preNode2.next = currNode;
+           
+        }
+        
+        return head;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>79.24%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/143-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.
+
+<ul>
+<li>Step1: examine n nodes.</li>
+<li>Step2.1: examine n/2 nodes.</li>
+<li>Step2.2: examine n/2 nodes.</li>
+<li>Step3: examine n nodes.</li>
+</ul>
+</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+
+<br>
+<hr>
+<h2>Learn From Others</h2>
+
+<h3>Algorithm</h3>
+
+<p>In my approach, step1 and step2.1 are all used for finding the middle node. Actually we can combine them into one step.</p>
+
+<p>If we use a fastNode that moves two steps at a time and a slowNode that moves one step at a time, then when fastNode arrives at the end, slowNode will arrive at the middle of the list.</p>
+
+<h3>Code</h3>
+
+<pre><code>public class Solution {
+    public ListNode reorderList(ListNode head) {
+        if(head == null)    return head;       
+        
+        //step1: split the list into two parts
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = head;
+        ListNode currNode = dummyHead;
+        ListNode preNode = dummyHead;
+        
+        while(currNode != null && currNode.next != null)
+        {
+            currNode = (currNode.next == null) ? null : currNode.next.next;
+            preNode = preNode.next;
+        }
+
+        dummyHead.next = preNode.next;
+        preNode.next = null;
+        
+        
+        //step2: reverse the second part
+        ListNode head2 = dummyHead.next;
+        ListNode currNode2 = dummyHead.next;
+        ListNode preNode2 = currNode2;
+        while(currNode2 != null)
+        {
+            preNode2 = currNode2.next;
+            currNode2.next = dummyHead.next;
+            dummyHead.next = currNode2;
+            currNode2 = preNode2;
+        }
+        if(head2 != null)   head2.next = null;
+        
+        
+        //step3: combine the two parts
+        currNode = head;
+        currNode2 = dummyHead.next;
+       
+        while(currNode != null && currNode2 != null)
+        {
+            preNode = currNode;
+            preNode2 = currNode2;
+            currNode = currNode.next;
+            preNode.next = currNode2;
+            currNode2 = currNode2.next;
+            preNode2.next = currNode;
+           
+        }
+        
+        return head;
+    }
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>3ms</code></p>
+
+<p>It beats <code>29.00%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/143-runtime-2.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.
+
+<ul>
+<li>Step1: fastNode examines n nodes and slowNode examines n/2 nodes.</li>
+<li>Step2: examine n/2 nodes.</li>
+<li>Step3: examine n nodes.</li>
+</ul>
+</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

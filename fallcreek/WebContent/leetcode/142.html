@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-142. Linked List Cycle II</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>142. Linked List Cycle II</h1>
+
+<hr />
+
+<blockquote><p>Given a linked list, return the node where the cycle begins. If there is no cycle, return null.</p>
+<br>
+<p>Note: Do not modify the linked list.</p>
+<br>
+<p>Follow up:</p>
+
+<p>Can you solve it without using extra space?</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Linked List, Two Pointers</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>We also use the method in problem 141.</p>
+
+<p>If the list has a cycle, then fastNode and slowNode will meet eventually. Take the list in the following picture as an example, fastNode and slowNode meet at node 7.</p>
+
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/142-algorithm-1-1.png" width="475px"></div>
+<br>
+
+<p>Now, slowNode have moved 6 steps, and fastNode have moved 6 * 2 = 12 steps. Look at the following picture. We set the length from head to jointNode to be x, the length from jointNode to meetNode to be y.</p>
+
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/142-algorithm-1-2.png" width="475px"></div>
+<br>
+
+<p>We know that slowNode have moved s1 = (x+y) steps, and fastNode have moved s2 = (x+y+n(y+z))steps, where n is the number that fastNode have passed the whole cycle. It is because that fastNode may well have passed the whole cycle n times before meeting slowNode.</p>
+
+<p>So s2 - s1 = n(y+z), which is n times of the length of cycle. In the example above, x = 3, y = 3, z = 3, s1 = 6 and s2 = 12. (s2 - s1 = 6) is n times of the length of cycle.</p>
+
+<p>Next we should find the position of jointNode. We use preNode and currNode to traverse the list from head, and keep the length from preNode to currNode being (s2 - s1 = 6). PreNode and currNode will meet at the jointNode eventually, because when preNode arrives at the jointNode, currNode must have traversed the whole cycle n times.</p>
+
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/142-algorithm-1-3.png" width="475px"></div>
+<br>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode fastNode = head;
+        ListNode slowNode = head;
+        
+        int fastCount = 1;
+        int slowCount = 1;
+        int length = 0;
+        boolean isLoop = false;
+        while(fastNode != null && fastNode.next != null && fastNode.next.next != null)
+        {
+            
+            if(fastNode == slowNode && fastCount != 1)
+            {
+                isLoop = true;
+                length = fastCount - slowCount;
+                
+                break;
+            }
+            
+            fastNode = fastNode.next.next;
+            fastCount += 2;
+            slowNode = slowNode.next;
+            slowCount += 1;
+        }
+        
+        if(isLoop)
+        {
+            int count = 0;
+            
+            ListNode currNode = head;
+            ListNode preNode = head;
+            
+            while(count != length)
+            {
+                currNode = currNode.next;
+                count++;
+            }
+            
+            while(preNode != currNode)
+            {
+                preNode = preNode.next;
+                currNode = currNode.next;
+            }
+            
+            return preNode;
+        }
+        
+        
+        return null;
+    }
+    
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>10.72%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/142-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>. In the worst case we examine 3n nodes during the first process(fast and slow nodes), and examine 3n nodes during the second process(pre and curr nodes). So the time complexity is still <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+
+
+<h2>Learn From Others</h2>
+
+<h3>Algorithm</h3>
+
+<p>Although the time complexity of my solution is <em>O(n)</em>, its performance is not the best because it examines too much nodes in the second part. Now I'll introduce another solution from the internet, whose first part also uses fast and slow nodes.</p>
+
+<p>At first, let's look at the following picture.</p>
+
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/142-algorithm-2-1.png" width="475px"></div>
+<br>
+
+<ul>
+<li><p>The length from head to jointNode is <strong>x</strong></p></li>
+<li><p>The length from jointNode to meetNode is <strong>y</strong></p></li>
+<li><p>The length from meetNode to jointNode is <strong>z</strong></p></li>
+<li><p>The length of the cycle is <strong>c</strong></p></li>
+</ul>
+
+
+<p>When fastNode and slowNode meet, we will have</p>
+
+<pre><code>s1 = x + y      // s1 is the steps that slowNode moves.
+s2 = x + y + nc // s2 is the steps that fastNode moves, n ≥ 0.
+2 * s1 = s2
+</code></pre>
+
+<p>We combine these functions and will have</p>
+
+<pre><code>2x + 2y = x + y + nc
+x = nc - y
+  = (n-1)c + c - y
+  = (n-1)c + z
+</code></pre>
+
+<p>Now, let's move head node x steps forward, and move fastNode the same steps forward(one step at a time instead of two) from the position of meetNode. Because x = (n-1)c + z, so fastNode will traverse the cycle (n-1) times and return the same position(meetNode). Then fastNode will move another z steps, which are the length from meetNode to jointNode. So fastNode will arrive at the jointNode after moving x steps. What's more, x is length from head to jointNode, which means that head will also arrive at the jointNode after moving x steps. So we only need to move head and fastNode forward until they are equal.</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/142-algorithm-2-2.png" width="475px"></div>
+<br>
+
+<h3>Code</h3>
+
+<pre><code>public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode fastNode = head;
+        ListNode slowNode = head;
+        
+        int fastCount = 1;
+        int slowCount = 1;
+        int length = 0;
+        boolean isLoop = false;
+        while(fastNode != null && fastNode.next != null && fastNode.next.next != null)
+        {
+            
+            if(fastNode == slowNode && fastCount != 1)
+            {
+                while(head != fastNode)
+                {
+                    fastNode = fastNode.next;
+                    head = head.next;
+                }
+                return head;
+    
+            }
+            
+            fastNode = fastNode.next.next;
+            fastCount += 2;
+            slowNode = slowNode.next;
+            slowCount += 1;
+        }
+              
+        return null;
+    }   
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>16.81%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/142-runtime-2.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>. In the worst case we examine 3n nodes during the first process, and examine 2n nodes during the second process. So the time complexity is still <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+
+<br>
+</div>
+</body>
+</html>

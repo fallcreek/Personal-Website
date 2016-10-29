@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>234. Palindrome Linked List</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>234. Palindrome Linked List</h1>
+
+<hr />
+
+<blockquote><p>Given a singly linked list, determine if it is a palindrome.</p>
+
+<p>Follow up:</p>
+
+<p>Could you do it in O(n) time and O(1) space?</p>
+<br>
+<p>Difficulty: Easy</p>
+
+<p>Tag: Linked List, Two Pointers</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>In [problem 143. Reorder List], we need to move the ith(i > n/2) node behind the (n-i)th node. I split the list into two parts in the middle and reverse the latter. Then it is very easy to insert the second part into the first part.</p>
+
+<p>This method is also applicable to this problem. However, we don't need to insert, we just need to compare values of the two sublists. If equal, then the list is a palindrome.</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/234-algorithm-1.png" width="475px"></div>
+<br>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean isPalindrome(ListNode head) {
+        if(head == null || head.next == null)     return true;
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = head;
+        
+        ListNode fast = head;
+        ListNode slow = dummyHead;
+        
+        while(fast.next != null && fast.next.next != null)
+        {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        
+        ListNode head2 = reverseList(slow.next);
+
+        return isEqual(head,head2);
+        
+    }
+    
+    public ListNode reverseList(ListNode dummyHead)
+    {
+        ListNode currNode = dummyHead.next.next;
+        ListNode preNode = dummyHead.next;
+        
+        while(currNode != null)
+        {
+            preNode.next = currNode.next;
+            currNode.next = dummyHead.next;
+            dummyHead.next = currNode;
+            currNode = preNode.next;
+        }
+        return dummyHead.next;
+    }
+    
+    public boolean isEqual(ListNode l1, ListNode l2)
+    {
+        while(l2 != null && l1.val == l2.val)
+        {
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        
+        return (l2 == null);
+    }
+  
+}</code></pre>
+
+<h3>Runtime</h3>
+
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>33.33%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/234-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+
+<br>
+</div>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-236. Lowest Common Ancestor of a Binary Tree</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>236. Lowest Common Ancestor of a Binary Tree</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.</p>
+<br>
+<p>According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes v and w as the lowest node in T that has both v and w as descendants (where we allow a node to be a descendant of itself).”</p>
+
+<pre><code>      _______3______
+     /              \
+  ___5__          ___1__
+ /      \        /      \
+ 6      _2       0       8
+       /  \
+      7   4</code></pre>
+
+<p>For example, the lowest common ancestor (LCA) of nodes 5 and 1 is 3. Another example is LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>My solution is recursive and it is an postorder traversal.</p>
+
+<p>I check whether root's left or right subtree has p or q. If has, return p or q. If not, return null.</p>
+
+<p>Then I check the results that root's subtrees return.</p>
+
+<ol>
+<li><p>If both the returned values are not null, then root is the lowest common ancestor.</p></li>
+<li><p>If root equals p or q, then root is also the lowest common ancestor.</p></li>
+<li><p>If one of the returned value is not null, return this value. It means that root is the ancestor of one of p and q.</p></li>
+<li><p>If two of the returned value are null, return null. 4. It means this root is not ancestor of p or q.</p></li>
+</ol>
+
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null)    return null;
+        return postOrder(root,p,q);
+    }
+    
+    public TreeNode postOrder(TreeNode root, TreeNode p, TreeNode q)
+    {
+        if(root == null)    return null;
+        
+        TreeNode left = postOrder(root.left,p,q);
+        TreeNode right = postOrder(root.right,p,q);
+        
+        boolean isLeft = (left != null) ? true : false;
+        boolean isRight = (right != null) ? true : false;
+        
+        if(isLeft && isRight)
+            return root;
+        else if(root == p || root == q)
+            return root;
+        else if(isLeft || isRight)
+            return isLeft ? left : right;
+        else 
+            return null;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>13ms</code></p>
+
+<p>It beats <code>33.78%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/236-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity:<em>O(h)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

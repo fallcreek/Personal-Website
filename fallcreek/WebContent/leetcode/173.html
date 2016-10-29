@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-173. Binary Search Tree Iterator</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>173. Binary Search Tree Iterator</h1>
+
+<hr />
+
+<blockquote><p>Implement an iterator over a binary search tree (BST). Your iterator will be initialized with the root node of a BST.</p>
+
+<p>Calling next() will return the next smallest number in the BST.</p>
+<br>
+<p>Note: next() and hasNext() should run in average O(1) time and uses O(h) memory, where h is the height of the tree.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Stack, Design</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>The essence of this problem is how to output the inorder traversal of a BST, because the inorder traversal of a BST is in ascending order. The difficulty is how to design next() and hasNext() that use O(1) time and O(h) memory on average.</p>
+
+<p>My first solution is storing the inorder traversal of the BST in an array. Although it is easy and has good performance, it uses O(n) memory instead of O(h).</p>
+
+<p>My second solution is using stack to achieve inorder traversal, just like the second method in [problem 94]. Then on average, the stack uses O(h) memory. The next() function only need to check whether the stack is null, which runs in O(1) time. The hadNext() function should return the first node of the stack, which also runs in O(1) time. However, hasNext() have to push nodes into stack. Is it still O(1)?</p>
+
+<p>Yes, it is still O(1). Let's proof it!</p>
+
+<p>For example:</p>
+
+<pre><code>     1
+    / \
+   2   3
+  /  \
+ 4    5
+     /
+    6
+   /
+  7
+ ... </code></pre>
+
+<p>At first, node 1, node 2 and node 4 should be pushed into stack. Then hadNext() will output node 4 and node 2. Because node 2's right subtree is not null, we should push new nodes into stack. We need to push node 5, node 5's left node, node 5's left node's left node... until some node doesn't have left node. So what's the time complexity of this process?</p>
+
+<p>On average, the probability that a tree has a left subtree is 1/2. So the probability that a tree has a left subtree and it also has a left subtree is 1/2 * 1/2.</p>
+
+<p>If push one node run in c time, which is a constant value. Then hasNext() run in</p>
+
+<pre><code>  c + c * (1/2) + c * (1/2)^2 + c * (1/2)^3 + ... c * (1/2)^n +
+= c * (1 + 1/2 + 1/4 + 1/8 + ... 1/2^n) 
+= c * (1 - 1/2^n)
+= O(1) when n is large enough</code></pre>
+
+<p>Now we have proofed that next() and hasNext() all run in average O(1) time and uses O(h) memory.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+
+public class BSTIterator {
+
+    Stack&lt;TreeNode> stack = new Stack&lt;TreeNode>();
+    
+    public BSTIterator(TreeNode root) {
+        pushStack(root);
+    }
+
+    public void pushStack(TreeNode root)
+    {
+        if(root != null)
+        {
+            stack.push(root);
+            while(root.left != null)
+            {
+                root = root.left;
+                stack.push(root);
+            }
+        }
+    }
+
+    /** @return whether we have a next smallest number */
+    public boolean hasNext() {
+        return !stack.isEmpty();
+    }
+
+    /** @return the next smallest number */
+    public int next() {
+        TreeNode node = stack.pop();
+        pushStack(node.right);
+        return node.val;
+    }
+}
+
+/**
+ * Your BSTIterator will be called like this:
+ * BSTIterator i = new BSTIterator(root);
+ * while (i.hasNext()) v[f()] = i.next();
+ */</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>7ms</code></p>
+
+<p>It beats <code>16.01%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/173-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(1)</em>.</li>
+<li>Space Complexity:<em>O(h)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

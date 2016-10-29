@@ -1,0 +1,40 @@
+@CHARSET "UTF-8";
+
+#logo{
+	font-family:logofont;
+	color:white;/* fd5251 */
+	font-size:50px;
+	float:left;
+}
+
+#menu{
+	position:relative;
+	margin-right:0;
+	width:1000px;
+	top:10px;
+	float:right;
+}
+
+#menu .menu_item{
+	font-family:menufont;
+	color:#fd5251;
+	font-size:30px;
+	cursor:pointer;
+	margin-bottom:20px;
+	float:right;
+	width:180px;
+	text-align:center;
+	height:30px;
+	text-height:30px;
+} 
+
+#menu .menu_item:hover{
+	background:rgba(212,210,222,0.4);
+	-webkit-border-radius: 5px; 
+}
+
+#menu a{
+	text-decoration:none; 
+	color:#fd5251;
+}
+

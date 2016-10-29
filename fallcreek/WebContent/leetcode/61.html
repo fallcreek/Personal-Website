@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-61. Rotate List</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>61. Rotate List</h1>
+
+<hr />
+
+<blockquote><p>Given a list, rotate the list to the right by k places, where k is non-negative.</p>
+<br>
+<p>For example:</p>
+
+<p>Given 1->2->3->4->5->NULL and k = 2,</p>
+
+<p>return 4->5->1->2->3->NULL.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Linked List; Two Pointers</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm 1</h3>
+
+<p>This problem is similar to problem 19 (Remove Nth Node From End of List). However, my algorithm2(Two pointers method) in problem 19 is not applicable to this problem. It is because that k may be larger than the length of the list. For example:</p>
+
+<p>Input: 1->2->3->4->5->NULL and k = 6,</p>
+
+<p>we should return 5->1->2->3->4->NULL.</p>
+
+<p>One simple way is to traverse the list to count the length, and then calculate the real places to rotate. With these figures, we will know where to split the list.</p>
+
+<h3>Code 1</h3>
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        
+        if(head == null)    return null;
+        
+        ListNode returnHead = null;
+        ListNode currNode = head;
+        
+        
+        int length = countLength(head);
+        int realPlaces = k % length;
+        if(realPlaces == 0)
+            return head;
+            
+        int leftNodes = length - realPlaces;
+        
+        int count = 0;
+        
+        while(count < leftNodes - 1)
+        {
+            count++;
+            currNode = currNode.next;
+        }
+        
+        returnHead = currNode.next;
+        
+        currNode.next = null;
+        currNode = returnHead;
+        while(currNode.next != null)
+        {
+            currNode = currNode.next;
+        }
+        currNode.next = head;
+        
+        return returnHead;
+        
+    }
+    
+    
+    public int countLength(ListNode head)
+    {
+        int count = 0;
+        
+        while(head != null)
+        {
+            count++;
+            head = head.next;
+        }
+        
+        return count;
+    }
+      
+}</code></pre>
+
+
+<h3>Runtime 1</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>10.03%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/61-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+
+<h3>Complexity 1</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>, where n is the length of the given list. Because each node is visited at most twice.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+
+
+<hr />
+
+<h3>Algorithm 2</h3>
+
+<p>Although solution 1 has a good performance, it contains three while loops. Can we simplify our code?</p>
+
+<p>The problem is "rotate list", so why not link the tail to the head in the first pass? Then we only need to move one pointer in a while loop instead of using two while loops.</p>
+
+<p>This process is shown in the following image.</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/61-algorithm-2.png" width="475px"></div>
+<br>
+
+<h3>Code 2</h3>
+
+<pre><code>public class Solution {
+    public ListNode rotateRight(ListNode head, int k) {
+        
+        if(head == null)    return null;
+        
+        ListNode currNode = head;
+        ListNode tailNode = null;
+        
+        int length = 0;
+        
+        while(currNode != null)
+        {
+            length++;
+            tailNode = currNode;
+            currNode = currNode.next;
+        }
+        tailNode.next = head;
+        
+        int realPlaces = k % length;
+        int moveTail = length - realPlaces;
+        
+        while(moveTail > 0)
+        {
+            tailNode = tailNode.next;
+            moveTail--;
+        }
+        head = tailNode.next;
+        tailNode.next = null;
+        
+        return head;
+        
+    }  
+}</code></pre>
+
+
+<h3>Runtime 2</h3>
+
+<p>It is the same as Algorithm 1.</p>
+
+<h3>Complexity 2</h3>
+
+<p>It is the same as Algorithm 1.</p>
+<br>
+</div>
+</body>
+</html>

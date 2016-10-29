@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-108. Convert Sorted Array to Binary Search Tree</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>108. Convert Sorted Array to Binary Search Tree</h1>
+
+<hr />
+
+<blockquote><p>Given an array where elements are sorted in ascending order, convert it to a height balanced BST.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>If we pick out the middle node of the given array to be the root and the nodes before it in the arrary become its left children and the nodes after it become its right children, the number difference of nodes on both side of the root won't exceed one. Do it recursively, we will get a height balanced BST.</p>
+
+<p>For example,</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        if(nums == null || nums.length == 0)    return null;
+        
+        return balance(nums,0,nums.length - 1);
+        
+    }
+    
+    public TreeNode balance(int[] nums, int start, int end)
+    {
+        if(start > end) return null;
+        
+        int mid = start + (end - start) / 2;
+        TreeNode head = new TreeNode(nums[mid]);
+        
+        head.left = balance(nums,start,mid-1);
+        head.right = balance(nums,mid+1,end);
+        
+        return head;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>8.19%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/108-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(h)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

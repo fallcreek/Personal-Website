@@ -1,0 +1,37 @@
+@CHARSET "UTF-8";
+
+@font-face
+{
+font-family: 'logofont';
+src: url("../css/font/Impact.ttf") format('truetype');
+}
+
+@font-face
+{
+font-family: 'menufont';
+src: url("../css/font/LetterGothicStd.otf");
+}
+
+@font-face
+{
+font-family: 'difficultyfont';
+src: url("../css/font/HoboStd.otf");
+}
+
+@font-face
+{
+font-family: 'idfont';
+src: url("../css/font/SignPainter.otf");
+}
+
+@font-face
+{
+font-family: 'titlefont';
+src: url("../css/font/HoboStd.otf");
+}
+
+@font-face
+{
+font-family: 'contactfont';
+src: url("../css/font/MyriadPro-Regular.otf");
+}

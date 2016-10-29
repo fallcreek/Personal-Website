@@ -32,9 +32,6 @@ public class searchUserDatabase {
 			if(rowCount == 0)
 			{
 				System.out.println("查询不到该用户");
-				rs.close();
-				ps.close();
-				conn.close();
 				return "";
 			}
 			String result = "";
@@ -43,9 +40,6 @@ public class searchUserDatabase {
 			{
 				result += rs.getString("id");
 			}
-			rs.close();
-			ps.close();
-			conn.close();
 			return result;
 			
 		} catch (Exception e) {

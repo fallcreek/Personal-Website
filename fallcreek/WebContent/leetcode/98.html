@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-98. Validate Binary Search Tree</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>98. Validate Binary Search Tree</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, determine if it is a valid binary search tree (BST).</p>
+<br>
+<p>Assume a BST is defined as follows:</p>
+
+<p>The left subtree of a node contains only nodes with keys less than the node's key.</p>
+
+<p>The right subtree of a node contains only nodes with keys greater than the node's key.</p>
+
+<p>Both the left and right subtrees must also be binary search trees.</p>
+<br>
+<p>Example 1:</p>
+
+<pre><code>  2
+ / \
+1   3</code></pre>
+
+<p>Binary tree [2,1,3], return true.</p>
+<br>
+<p>Example 2:</p>
+
+<pre><code>  1
+ / \
+2   3</code></pre>
+
+<p>Binary tree [1,2,3], return false.</p>
+<br>
+
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm (Stack)</h3>
+
+<p>According to the property of BST, its inorder traversal will pass the smallest node to the largest node.</p>
+
+<p>In my solution, I will traverse the tree by inorder traversal and judge whether the node's value is always ascending.</p>
+
+<h3>Code (Version 1 Recursive)</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean isValidBST(TreeNode root) {
+        Stack&lt;Integer> stack = new Stack&lt;Integer>();       
+        return inorder(root,stack);
+    }
+    
+    public boolean inorder(TreeNode root,Stack&lt;Integer> stack)
+    {
+        if(root == null)    return true;
+        
+        if(!inorder(root.left,stack))
+            return false;
+        
+        if(stack.isEmpty() || !stack.isEmpty() && root.val > stack.peek())
+            stack.push(root.val);
+        else
+            return false;
+            
+        if(!inorder(root.right,stack))
+            return false;
+        
+        return true;
+    }
+}</code></pre>
+
+
+<h3>Code (Version 2 Iterative)</h3>
+
+<pre><code>public class Solution {
+    public boolean isValidBST(TreeNode root) {
+        Stack&lt;TreeNode> stack = new Stack&lt;TreeNode>();
+        
+        Integer preVal = null;
+        
+        while(root != null || !stack.isEmpty())
+        {
+            while(root != null)
+            {
+                stack.push(root);
+                root = root.left;
+            }
+            
+            root = stack.pop();
+            
+            
+            if(preVal == null || preVal < root.val)  preVal = root.val;
+            else 
+                return false;
+           
+           
+            root = root.right;
+            
+        }
+        
+        return true;
+    }   
+}</code></pre>
+
+
+<h3>Runtime (Version 1 Recursive)</h3>
+<p>Runtime: <code>3ms</code></p>
+
+<p>It beats <code>22.96%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/98-runtime-1.png">
+</div>
+<br>
+<h3>Runtime (Version 2 Iterative)</h3>
+<p>Runtime: <code>5ms</code></p>
+
+<p>It beats <code>6.63%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/98-runtime-2.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(h)</em>, where h is the height of the tree.</li>
+</ul>
+
+
+<hr />
+
+<h2>Others Solution</h2>
+
+<h3>Algorithm (Recursive)</h3>
+
+<p>This is a more concise recursive solution. It checks whether a node's value is between (lower bound, upper bound).</p>
+
+<p>To begin with, the bound of root is (-∞, +∞). If its value satisfy the bound, then check its left child and right child. Its left child's value is must lower than root' value, so update the upper bound to be root.val for its left child. Similarly, update the lower bound to be root.val for its right child. Do it recursively and we will gain the answer.</p>
+
+<h3>Code</h3>
+
+<pre><code>public class Solution {
+     public boolean isValidBST(TreeNode root) {
+        return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+    
+    public boolean isValidBST(TreeNode root, long minVal, long maxVal) {
+        if (root == null) return true;
+        if (root.val >= maxVal || root.val <= minVal) return false;
+        return isValidBST(root.left, minVal, root.val) && isValidBST(root.right, root.val, maxVal);
+    }   
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>33.15%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/98-runtime-3.png">
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(h)</em>, where h is the height of the tree.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

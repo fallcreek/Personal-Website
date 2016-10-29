@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-145. Binary Tree Postorder Traversal</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>145. Binary Tree Postorder Traversal</h1>
+
+<hr />
+
+<blockquote><p>Given a binary tree, return the postorder traversal of its nodes' values.</p>
+<br>
+<p>For example:</p>
+
+<p>Given binary tree {1,#,2,3},</p>
+
+<pre><code> 1
+  \
+   2
+  /
+ 3</code></pre>
+
+<p>return [3,2,1].</p>
+
+<p>Note: Recursive solution is trivial, could you do it iteratively?</p>
+<br>
+<p>Difficulty: Hard</p>
+
+<p>Tag: Tree, Stack</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm 1 (Recursive)</h3>
+
+<ol>
+<li>Do a postorder traversal on the left subtree.</li>
+<li>Do a postorder traversal on the right subtree.</li>
+<li>Print out the root (or the subtree’s root) value.</li>
+</ol>
+
+
+<h3>Code 1</h3>
+
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List&lt;Integer> postorderTraversal(TreeNode root) {
+        List list = new ArrayList();
+        return postorder(root,list);
+    }
+    
+    public List postorder(TreeNode root, List list)
+    {
+        if(root == null)    return list;
+        
+        list = postorder(root.left,list);
+        list = postorder(root.right,list);
+        list.add(root.val);
+        return list;
+    }
+}</code></pre>
+
+<h3>Runtime 1</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>67.65%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/145-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity 1</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>. Because the function will be called once for each node in the tree.</li>
+<li>Space Complexity:<em>O(h)</em>, where h is the maximum height of the tree.</li>
+</ul>
+
+
+<hr />
+
+<h3>Algorithm 2 (Iterative)</h3>
+
+<p>In this problem, I will use the method that I have learned in [problem 144]. The difference is that I don't pop when an iteration starts. Instead, I use peek, which return the first element in a stack without removing it. It is because in a postorder traversal, we need to write down root's value after all its subtrees are finished. That's why we should use peek to gain the first node and then push its subtrees' roots into stack.</p>
+
+<p>However, if we don't pop a node when we push its subtrees' roots, how can we know whether the node has been visited? In my solution, I set a root's left and right pointers to be null when I first visit it. Then if I visited a leaf node, its value should be added to the list, and the node should be removed.</p>
+
+<ol>
+<li>Peek the stack and gain the first node.</li>
+<li>Push its right subtree's root into stack.</li>
+<li>Push its left subtree's root into stack.</li>
+<li>If the node is a leaf node, add its value to the list and remove it from the stack.</li>
+<li>Set root's left and right pointers to be null.</li>
+</ol>
+
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/145-algorithm-2.png" width="475px"></div>
+<br>
+
+<h3>Code 2</h3>
+
+
+<pre><code>public class Solution {
+    public List&lt;Integer> postorderTraversal(TreeNode root) {
+        Stack&lt;TreeNode> stack = new Stack&lt;TreeNode>();
+        List&lt;Integer> list = new ArrayList&lt;Integer>();
+        if(root == null)    return list;
+        
+        stack.push(root);
+        while(!stack.isEmpty())
+        {
+            root = stack.peek();
+            
+            if(root.right != null)  stack.push(root.right);
+            if(root.left != null)   stack.push(root.left);
+            
+            if(root.right == null && root.left == null)
+            {
+                list.add(root.val);
+                stack.pop();
+            }
+            
+            root.right = null;
+            root.left = null;
+            
+        }
+        return list;
+    }
+}</code></pre>
+
+
+<h3>Runtime 2</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>8.97%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/145-runtime-2.png">
+</div>
+<br>
+
+<h3>Complexity 2</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>. Because each node in the tree will be visited once.</li>
+<li>Space Complexity: <em>O(n)</em>. In the worst case (such as the example above), every node will be stored in the stack.</li>
+</ul>
+
+
+<hr />
+
+<h2>Others Solution</h2>
+
+<h3>Algorithm (Iterative)</h3>
+
+<p>This solution comes from the discuss of this problem in leetcode.</p>
+
+<blockquote><p>pre-order traversal is root-left-right, and post order is left-right-root. modify the code for pre-order to make it root-right-left, and then reverse the output so that we can get left-right-root .</p></blockquote>
+
+<p>Strictly speaking, it is not a postorder traverse. But there is no doubt that it is a very smart solution.</p>
+
+<h3>Code</h3>
+
+
+<pre><code>public class Solution {
+    public List&lt;Integer> postorderTraversal(TreeNode root) {
+        List&lt;Integer> list = new LinkedList&lt;Integer>();
+        Stack&lt;TreeNode> stack = new Stack&lt;TreeNode>();
+        if(root!=null) stack.push(root);
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            list.add(node.val);
+            
+            if(node.left!=null) stack.push(node.left);
+            if(node.right!=null) stack.push(node.right);
+        }
+        Collections.reverse(list);
+        return list;
+    }
+    
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>3ms</code></p>
+
+<p>It beats <code>0.92%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/145-runtime-3.png">
+</div>
+<br>
+
+
+</div>
+</body>
+</html>

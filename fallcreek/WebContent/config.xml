@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/html4/spring-beans.dtd">
+<beans>
+<bean id="HelloWorld" class="JavaBean.helloworld">
+	<property name="msg">
+		<value>HelloWorld</value>
+	</property>
+</bean>
+</beans>

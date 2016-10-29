@@ -1,0 +1,23 @@
+@CHARSET "UTF-8";
+
+.mask{  
+	position:absolute;
+    /* width: 2000;  
+    height: 2000;  */
+    background:  black ;  
+    filter: ALPHA(opacity = 60); 
+    opacity:0.6;  
+    z-index: 2;  
+    visibility: hidden;
+}  
+
+.around{
+	position:absolute;
+	/* width: 2000;  
+    height: 2000;  */
+    background:  white ;  
+    filter: ALPHA(opacity =0); 
+    opacity:0;  
+    z-index: 3;  
+    visibility: hidden;  
+}

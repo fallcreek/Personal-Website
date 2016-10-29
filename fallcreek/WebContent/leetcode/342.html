@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-342. Power of Four</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>342. Power of Four</h1>
+
+<hr />
+
+<blockquote><p>Given an integer (signed 32 bits), write a function to check whether it is a power of 4.</p>
+
+<p>Example:
+Given num = 16, return true. Given num = 5, return false.</p>
+
+<p>Follow up: Could you solve it without loops/recursion?</p>
+<br>
+<p>Difficulty: Easy</p>
+
+<p>Tag: Bit Manipulation</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm1</h3>
+
+<p>One simple way of solving this problem is to keep dividing n by 4.</p>
+
+<h3>Code1</h3>
+
+<pre><code>public class Solution {
+    public boolean isPowerOfFour(int n) {
+         if(n &lt;= 0)
+            return false;
+        else
+            return (n == 1) || ((n % 4 == 0) &amp;&amp; isPowerOfFour(n/4));
+    }
+}</code></pre>
+
+<h3>Runtime1</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>19.95%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/342-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br><br>
+
+<hr />
+
+<h3>Algorithm2</h3>
+
+<p>If we convert the given number to base 4 and the representation is of the form 100...0, then the number if power of 4.</p>
+
+<p>For example:</p>
+
+<p>10 (base 4) = 4 (base 10)</p>
+
+<p>100 (base 4) = 16 (base 10)</p>
+
+<p>1000 (base 4) = 64 (base 10)</p>
+
+<p>...</p>
+
+<h3>Code2</h3>
+
+<pre><code>public class Solution {
+    public boolean isPowerOfFour(int num) {
+	return Integer.toString(num,4).matches("^10*$");
+    }
+}</code></pre>
+
+<h3>Runtime2</h3>
+<p>Runtime: <code>17ms</code></p>
+
+<p>It beats <code>2.83%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/342-runtime-2.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br><br>
+<hr />
+
+<h3>Algorithm3</h3>
+
+<p>If n is power of 4, then we have</p>
+
+<pre><code>4^x = n
+where x &gt;= 0 and x is an integer.</code></pre>
+
+<p>Then we gain</p>
+
+<pre><code>x = log(n) / log(4)</code></pre>
+
+<p>n is a power of four if and only if x is an integer.</p>
+
+<p>Note:This solution is problematic because double operations are not absolutely precise. In problem power of three, this soluion won't be accepted.</p>
+
+<h3>Code3</h3>
+
+<pre><code>public class Solution {
+    public boolean isPowerOfFour(int num) {
+       
+        if(num <= 0)
+            return false;
+        
+        return (Math.log(num) / Math.log(4)) % 1 == 0;
+    }
+}</code></pre>
+
+<h3>Runtime3</h3>
+<p>Runtime: <code>2ms</code></p>
+
+<p>It beats <code>19.95%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/342-runtime-3.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br><br>
+</body>
+</html>

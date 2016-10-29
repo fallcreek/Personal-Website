@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-222. Count Complete Tree Nodes</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>222. Count Complete Tree Nodes</h1>
+
+<hr />
+
+<blockquote><p>Given a complete binary tree, count the number of nodes.</p>
+<br>
+<p>Definition of a complete binary tree from Wikipedia:</p>
+
+<p>In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2^h nodes inclusive at the last level h.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Binary Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>My solution is very complex. Readers please ignore my soluton.</p>
+
+<p>However, I still want to write down my thought.</p>
+
+<p>If a tree's height is 4, then the last level can have at most 8 nodes. What I need to do is to find the position of the critical point. But the algorithm will exceed time limitation if we examine nodes from left to right or from right to left. So O(n) is too slow for this problem. Then we need to examine the nodes in O(logn), and binary search satisfies.</p>
+
+<p>So we split the nodes into two parts and examine the middle node. If the middle node is null, we use the same method to examine its left part. If not null, we examine its right part. Do this until we find the critical node.</p>
+
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+
+    public int countNodes(TreeNode root) {
+        int height = 0;
+        TreeNode currNode = root;
+        int number = 1;
+        int max = 0;
+        
+        while(currNode != null)
+        {
+            height++;
+            number *= 2;
+            currNode = currNode.left;
+        }
+        max = number - 1;
+        number /= 2;
+      
+        int mid = number / 2;
+        int low = 1;
+        int high = number;
+        boolean isNull = false;
+        boolean lastNode = false;
+        
+        while(low != mid || high != mid || !lastNode)
+        {
+            if(low == mid && high == mid)   lastNode = true;
+            
+            currNode = root;
+            int count = number;
+            int base = 0;
+            while(count > 1)
+            {
+                if(mid <= base + count / 2)
+                {
+                    currNode = currNode.left;
+                    count /= 2;
+                }
+                else 
+                {
+                    currNode = currNode.right;
+                    count /= 2;
+                    base += count;
+                }
+            }
+            if(currNode == null)
+            {
+                high = mid - 1;
+                mid = low + (mid - low) / 2;
+                if(high < mid)  high = mid;
+                isNull = true;
+            }
+            else
+            {
+                low = mid + 1;
+                if(high < low)  low = high;
+                mid = mid + (high - mid) / 2;
+                if(mid < low)   mid = low;
+                isNull = false;
+            }
+            
+        }
+        
+        return max - (number - mid + ((isNull) ? 1 : 0));   
+    }   
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>127ms</code></p>
+
+<p>It beats <code>16.62%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/222-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(logn)</em>.</li>
+<li>Space Complexity:<em>O(1)</em>.</li>
+</ul>
+
+
+<hr />
+
+<h2>Others Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>This solution is very elegant. The following picture will show how it works.</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/222-algorithm-1.png" width="475px"></div>
+<br>
+<h3>Code</h3>
+
+<pre><code>public class Solution {
+
+    public int countNodes(TreeNode root) {
+    if (root == null)
+      return 0;
+            
+    int hLeft = getHeight(root.left);
+    int hRight = getHeight(root.right);
+        
+    if (hLeft == hRight)
+      return (1 << hLeft) + countNodes(root.right);
+    else
+      return (1 << hRight) + countNodes(root.left);
+    
+  }
+    
+  int getHeight(TreeNode root) {
+    if (root == null)
+      return 0;
+        
+    return 1 + getHeight(root.left);
+  }
+   
+}</code></pre>
+
+
+<h3>Runtime</h3>
+<p>Runtime: <code>132ms</code></p>
+
+<p>It beats <code>8.64%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/222-runtime-2.png">
+</div>
+<br>
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(logn)</em>.</li>
+<li>Space Complexity:<em>O(h)</em>.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>

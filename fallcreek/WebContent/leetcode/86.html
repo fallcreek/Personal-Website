@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+<title>fallcreek-86. Partition List</title>
+
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>86. Partition List</h1>
+
+<hr />
+
+<blockquote><p>Given a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.</p>
+
+<p>You should preserve the original relative order of the nodes in each of the two partitions.</p>
+<br>
+<p>For example,</p>
+
+<p>Given 1->4->3->2->5->2 and x = 3,</p>
+
+<p>return 1->2->2->4->3->5.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Linked List, Two Pointers</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>I need to construct two lists where the first list contains nodes less than x and the second list contains the rest. I also need two pairs of (dummyHead,lastNode) that record (head,tail) of these lists.</p>
+
+<p>Then just traverse the original list, and distribute each node to its corresponding list.</p>
+
+<p>Finally, link the two lists and the problem is solved.</p>
+
+<h3>Code</h3>
+
+
+<pre><code>/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode partition(ListNode head, int x) {
+        
+        if(head == null)    return null;
+        
+        ListNode dummyLeftHead = new ListNode(0);
+        dummyLeftHead.next = null;
+        ListNode dummyRightHead = new ListNode(0);
+        dummyRightHead.next = null;
+        ListNode lastLeftNode = dummyLeftHead;
+        ListNode lastRightNode = dummyRightHead;
+        
+        ListNode currNode = head;
+        
+        while(currNode != null)
+        {
+            if(currNode.val >= x)
+            {
+                lastRightNode.next = currNode;
+                lastRightNode = currNode;
+            }
+            else
+            {
+                lastLeftNode.next = currNode;
+                lastLeftNode = currNode;
+            }
+            currNode = currNode.next;
+        }
+        
+        lastLeftNode.next = dummyRightHead.next;
+        lastRightNode.next = null;
+        
+        return dummyLeftHead.next;
+    }
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>1ms</code></p>
+
+<p>It beats <code>4.15%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/86-runtime-1.png">
+
+<div class="mask"></div>
+<div class="around"></div>
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>, where n is the length of the given list. Because each node is visited once.</li>
+<li>Space Complexity: <em>O(1)</em>.</li>
+</ul>
+<br>
+
+</div>
+</body>
+</html>

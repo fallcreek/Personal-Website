@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>fallcreek-105. Construct Binary Tree from Preorder and Inorder Traversal</title>
+<link href="../css/font.css" type="text/css" rel="stylesheet">
+<link href="../css/base.css" type="text/css" rel="stylesheet">
+<link href="../css/head.css" type="text/css" rel="stylesheet">
+<link href="../css/leetcode.css" type="text/css" rel="stylesheet">
+<link href="../css/picture.css" type="text/css" rel="stylesheet">
+
+<script src="../js/jquery-1.4.3.min.js"></script>
+<script src="../js/picture.js"></script>
+</head>
+<body>
+<iframe name="content_frame" marginwidth=0 marginheight=0 width=100% height=70 src="../leetcodehead.html" frameborder=0></iframe> 
+ 
+<div id="text">
+<h1>105. Construct Binary Tree from Preorder and Inorder Traversal</h1>
+
+<hr />
+
+<blockquote><p>Given preorder and inorder traversal of a tree, construct the binary tree.</p>
+<br>
+<p>Note:</p>
+
+<p>You may assume that duplicates do not exist in the tree.</p>
+<br>
+<p>Difficulty: Medium</p>
+
+<p>Tag: Tree, Array, Depth-first Search</p></blockquote>
+
+<h2>My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>Look at the following tree:</p>
+
+<pre><code>    __1__
+   /     \
+  2       3
+ /  \    /  \
+4   5   6    7
+   /
+  8 </code></pre>
+
+<p>Its preorder traversal is [1,2,4,5,8,3,6,7],</p>
+
+<p>and its inorder traversal is [4,2,8,5,1,6,3,7].</p>
+
+<p>We know that the first node in preorder traversal is the root(node 1). So the nodes before root in inorder traversal(node 4,2,8,5) are the inorder traversal of root's left subtree, and the nodes after root(node 6,3,7) are the inorder traversal of root's right subtree. Because left subtree has four nodes, so the following four node after root in preorder traversal(node 2,3,5,8) are the preorder traversal of root's left subtree, and the rest nodes in preorder traversal(node 3,6,7) are the preorder traversal of root's right subtree.</p>
+
+<p>Now, we know that the root of the tree is node 1. The preorder traversal of root's left subtree is [2,4,5,8] and its inorder traversal is [4,2,8,5]. The preorder traversal of root's right subtree is [3,6,7] and its inorder traversal is [6,3,7]. So the problem is divided into two subproblems.</p>
+
+<p>The first subproblem is how to construct a binary tree with its preorder traversal[2,4,5,8] and its inorder traversal[4,2,8,5]. The second subproblem is how to construct a binary tree with its preorder traversal[3,6,7] and its inorder traversal[6,3,7].</p>
+
+<p>Each subproblem can also be divided into two subproblems. When the subproblem cannot be divided any more such as a node has no child, we can combine the result.</p>
+<div id="wrap-img"><img alt="algorithm" src="../img/leetcode/105-algorithm-1.png" width="475px"></div>
+<br>
+<h3>Code</h3>
+
+<pre><code>/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder == null)    return null;
+        int length = preorder.length;
+        if(length == 0) return null;
+        
+        return build(preorder,0,length-1,inorder,0,length-1);
+        
+    }
+    
+    public TreeNode build(int[] preorder,int ps, int pe, int[] inorder, int is, int ie)
+    {
+        if(ps > pe) return null;
+       
+        TreeNode head = new TreeNode(preorder[ps]);
+        int position = findRoot(preorder[ps],inorder,is,ie);
+        
+        head.left = build(preorder,ps+1,ps+position,inorder,is,is+position-1);
+        head.right = build(preorder,ps+position+1,pe,inorder,is+position+1,ie);
+       
+        return head;
+    }
+    
+    public int findRoot(int val,int[] inorder, int is,int ie)
+    {
+        int pos = 0;
+        for(int i = is; i <= ie; i++)
+        {
+            if(inorder[i] == val) return pos;
+            else pos++;
+        }
+        return -1;
+    }
+    
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>21ms</code></p>
+
+<p>It beats <code>21.54%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/105-runtime-1.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(nlogn)</em>. The findRoot function will be called once for each node, and the left tree of the node will be examined.
+
+<ul>
+<li>  T(n) =  <em>O(n/2)</em> + 2<em>O(n/4)</em> + 4<em>O(n/8)</em> +... = <em>O(n/2)</em> + <em>O(n/2)</em> + <em>O(n/2)</em> + ... = h<em>O(n/2)</em> = <em>O(logn)O(n/2)</em> = <em>O(nlogn)</em></li>
+</ul>
+</li>
+<li>Space Complexity: <em>O(h)</em>.</li>
+</ul>
+
+
+<hr />
+
+<h2>Improvement of My Solution</h2>
+
+<h3>Algorithm</h3>
+
+<p>In my solution above, I calculate the position of each node in its inorder traversal. A map can help reduce the runtime. Because duplicates do not exist in the tree, we can use a map to store a node's value and its position(Time complexity: <em>O(n)</em>). Then we only need to search the map(Time complexity: <em>O(1)</em>) instead of calculate the position again.</p>
+
+<h3>Code</h3>
+
+<pre><code>public class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder == null)    return null;
+        int length = preorder.length;
+        
+        Map&lt;Integer,Integer> map = new HashMap&lt;Integer,Integer>();
+        for(int i = 0; i < length; i++)
+            map.put(inorder[i],i);
+        
+        return build(preorder,0,length-1,inorder,0,length-1,map);
+    }
+    
+    public TreeNode build(int[] preorder,int ps, int pe, int[] inorder, int is, int ie, Map&lt;Integer,Integer> map)
+    {
+        if(ps > pe) return null;
+       
+        TreeNode head = new TreeNode(preorder[ps]);
+        int position = map.get(preorder[ps]) - is;
+        
+        head.left = build(preorder,ps+1,ps+position,inorder,is,is+position-1,map);
+        head.right = build(preorder,ps+position+1,pe,inorder,is+position+1,ie,map);
+       
+        return head;
+    }
+    
+}</code></pre>
+
+<h3>Runtime</h3>
+<p>Runtime: <code>6ms</code></p>
+
+<p>It beats <code>76.02%</code> of javasubmissions.</p>
+
+<div>
+<a class="runtime-detail">Detail</a>
+<div class="mask"></div>
+<div class="around"></div>
+<img class="img-runtime" alt="runtime" src="../img/leetcode/105-runtime-2.png">
+</div>
+<br>
+
+<h3>Complexity</h3>
+
+<ul>
+<li>Time Complexity: <em>O(n)</em>.</li>
+<li>Space Complexity: <em>O(n)</em>. We need a map to store all nodes and their position.</li>
+</ul>
+<br>
+</div>
+</body>
+</html>
